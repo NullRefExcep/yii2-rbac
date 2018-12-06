@@ -1,0 +1,23 @@
+{
+    "name": "nullref/yii2-rbac",
+    "type": "yii2-extension",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.0",
+        "kartik-v/yii2-widget-depdrop": "@dev",
+        "kartik-v/yii2-widget-select2": "^2.0",
+        "nullref/yii2-useful": "^0.0.4",
+        "nullref/yii2-core": "^0.0.3",
+        "yiisoft/yii2": ">=2.0.4",
+        "yiisoft/yii2-jui": "^2.0"
+    },
+    "suggest": {
+      "wbraganca/yii2-fancytree-widget": "Fancytree widget for form input"
+    },
+    "autoload": {
+        "psr-4": {
+            "nullref\\rbac\\": "src/"
+        }
+    }
+}
