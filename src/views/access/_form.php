@@ -1,6 +1,7 @@
 <?php
 
 use kartik\depdrop\DepDrop;
+use nullref\rbac\assets\FancyTreeAsset;
 use nullref\rbac\forms\ActionAccessForm;
 use wbraganca\fancytree\FancytreeWidget;
 use yii\helpers\Html;
@@ -18,6 +19,7 @@ use yii\widgets\ActiveForm;
  * @var $isNew bool
  */
 
+FancyTreeAsset::register($this);
 $this->registerJs(<<<JS
     var tree = jQuery("#fancyree_itemsTree");
     app.initTree = function () {
@@ -25,6 +27,7 @@ $this->registerJs(<<<JS
     };
     app.selectTreeNode = app.initTree;
 JS
+
 );
 
 ?>
@@ -46,9 +49,10 @@ JS
                     'depends'     => [Html::getInputId($model, 'module')],
                     'placeholder' => Yii::t('rbac', 'Choose controller'),
                     'url'         => Url::to([
-                            '/rbac/access/controllers', 'selected' => $model->controller
-                        ]),
-                    'initialize' => true
+                        '/rbac/access/controllers',
+                        'selected' => $model->controller,
+                    ]),
+                    'initialize'  => true,
                 ],
             ]); ?>
 
@@ -59,9 +63,10 @@ JS
                     'depends'     => [Html::getInputId($model, 'module'), 'controller'],
                     'placeholder' => Yii::t('rbac', 'Choose action'),
                     'url'         => Url::to([
-                            '/rbac/access/actions',  'selected' => $model->action
+                        '/rbac/access/actions',
+                        'selected' => $model->action,
                     ]),
-                    'initialize' => true
+                    'initialize'  => true,
                 ],
             ]); ?>
         </div>
