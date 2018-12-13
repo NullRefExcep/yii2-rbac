@@ -2,7 +2,7 @@
 
 namespace nullref\rbac\forms;
 
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
 use nullref\rbac\validators\ItemsValidator;
 use Yii;
 use yii\base\Model;
@@ -28,11 +28,11 @@ abstract class ItemForm extends Model
     /**@var Item */
     public $item;
 
-    /** @var DbManager */
+    /** @var DBManager */
     protected $manager;
 
     public function __construct(
-        DbManager $manager,
+        DBManager $manager,
         $config = []
     )
     {

@@ -2,13 +2,13 @@
 
 namespace nullref\rbac\validators;
 
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
 use yii\validators\Validator;
 use Yii;
 
 class ItemsValidator extends Validator
 {
-    /** @var DbManager */
+    /** @var DBManager */
     protected $manager;
 
     /** @inheritdoc */

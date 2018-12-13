@@ -2,8 +2,7 @@
 
 namespace nullref\rbac\forms;
 
-use nullref\rbac\components\DbManager;
-use nullref\rbac\components\ManagerInterface;
+use nullref\rbac\components\DBManager;
 use nullref\rbac\repositories\AuthAssignmentRepository;
 use nullref\rbac\validators\ItemsValidator;
 use Yii;
@@ -19,26 +18,26 @@ class AssignmentForm extends Model
     /** @var integer */
     public $userId;
 
-    /** @var DbManager */
-    protected $manager;
+    /** @var DBManager */
+    private $manager;
 
     /** @var AuthAssignmentRepository */
-    protected $repository;
+    private $repository;
 
     /**
      * AssignmentForm constructor.
      *
-     * @param DbManager $manager
+     * @param DBManager $manager
      * @param AuthAssignmentRepository $repository
      */
     public function __construct(
-        DbManager $manager,
+        DBManager $manager,
         AuthAssignmentRepository $repository
     )
     {
         $this->manager = $manager;
         $this->repository = $repository;
-        $this->items = array_keys($this->manager->getItemsByUser($this->userId));
+        $this->items = array_keys($this->manager->getItemsByUserId($this->userId));
 
         parent::__construct();
     }
@@ -59,9 +58,9 @@ class AssignmentForm extends Model
     public function rules()
     {
         return [
-            ['user_id', 'required'],
+            ['userId', 'required'],
             ['items', ItemsValidator::class],
-            ['user_id', 'integer'],
+            ['userId', 'integer'],
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace nullref\rbac\components;
+namespace nullref\rbac\interfaces;
 
 use yii\rbac\ManagerInterface as BaseManagerInterface;
 

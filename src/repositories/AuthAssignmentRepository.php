@@ -2,15 +2,15 @@
 
 namespace nullref\rbac\repositories;
 
-use nullref\rbac\components\ManagerInterface;
+use nullref\rbac\components\DBManager;
 
 class AuthAssignmentRepository extends AbstractRepository
 {
-    /** @var ManagerInterface */
+    /** @var DBManager */
     private $manager;
 
     public function __construct(
-        ManagerInterface $manager,
+        DBManager $manager,
         $activeRecord
     )
     {
@@ -26,7 +26,7 @@ class AuthAssignmentRepository extends AbstractRepository
             $items = [];
         }
 
-        $assignedItems = $this->manager->getItemsByUser($userId);
+        $assignedItems = $this->manager->getItemsByUserId($userId);
         $assignedItemsNames = array_keys($assignedItems);
 
         foreach (array_diff($assignedItemsNames, $items) as $item) {

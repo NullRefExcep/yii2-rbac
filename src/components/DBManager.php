@@ -2,10 +2,11 @@
 
 namespace nullref\rbac\components;
 
+use nullref\rbac\interfaces\ManagerInterface;
 use yii\db\Query;
 use yii\rbac\DbManager as BaseDbManager;
 
-class DbManager extends BaseDbManager implements ManagerInterface
+class DBManager extends BaseDbManager implements ManagerInterface
 {
     /**
      * @param  int|null $type If null will return all auth items.

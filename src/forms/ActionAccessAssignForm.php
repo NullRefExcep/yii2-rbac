@@ -15,7 +15,7 @@ class ActionAccessAssignForm extends Model
     public $items;
 
     /** @var ActionAccessRepository */
-    protected $repository;
+    private $repository;
 
     /**
      * ActionAccessForm constructor.

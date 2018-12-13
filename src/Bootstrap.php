@@ -4,12 +4,15 @@ namespace nullref\rbac;
 
 use nullref\rbac\ar\ActionAccess;
 use nullref\rbac\ar\ActionAccessItem;
+use nullref\rbac\ar\AuthAssignment;
 use nullref\rbac\ar\AuthItem;
 use nullref\rbac\ar\AuthItemChild;
 use nullref\rbac\ar\AuthRule;
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
+use nullref\rbac\interfaces\UserProviderInterface;
 use nullref\rbac\repositories\ActionAccessItemRepository;
 use nullref\rbac\repositories\ActionAccessRepository;
+use nullref\rbac\repositories\AuthAssignmentRepository;
 use nullref\rbac\repositories\AuthItemChildRepository;
 use nullref\rbac\repositories\AuthItemRepository;
 use nullref\rbac\repositories\RuleRepository;
@@ -36,9 +39,11 @@ class Bootstrap implements BootstrapInterface
             return;
         };
 
-        if ($module->userActiveRecordClass === null) {
-            throw new InvalidConfigException(Module::class . '::userActiveRecordClass has to be set');
+        if ($module->userProvider === null) {
+            throw new InvalidConfigException(Module::class . '::userProvider has to be set');
         }
+        $module->userProvider = new $module->userProvider();
+        $this->checkUserProvider($module);
 
         if ($module->userComponent === null) {
             throw new InvalidConfigException(Module::class . '::userComponent has to be set');
@@ -46,7 +51,7 @@ class Bootstrap implements BootstrapInterface
 
         $classMap = array_merge($module->defaultClassMap, $module->classMap);
         //TODO
-        foreach (['Category', 'CategoryQuery'] as $item) {
+        foreach ([] as $item) {
             $className = __NAMESPACE__ . '\models\\' . $item;
             $definition = $classMap[$item];
             Yii::$container->set($className, $definition);
@@ -66,16 +71,22 @@ class Bootstrap implements BootstrapInterface
 
             if (!$authManager) {
                 $app->set('authManager', [
-                    'class' => DbManager::class,
+                    'class' => DBManager::class,
                 ]);
             } else if (!($authManager instanceof ManagerInterface)) {
                 throw new InvalidConfigException('You have wrong authManager configuration');
             }
         }
 
-        //Set user active record
-        Yii::$container->set(User::class, $module->userActiveRecordClass);
-
+        //Repositories
+        Yii::$container->set(
+            ActionAccessItemRepository::class,
+            function ($container, $params, $config) {
+                return new ActionAccessItemRepository(
+                    $container->get(ActionAccessItem::class)
+                );
+            }
+        );
         Yii::$container->set(
             ActionAccessRepository::class,
             function ($container, $params, $config) {
@@ -86,19 +97,11 @@ class Bootstrap implements BootstrapInterface
             }
         );
         Yii::$container->set(
-            ActionAccessItemRepository::class,
+            AuthAssignmentRepository::class,
             function ($container, $params, $config) {
-                return new ActionAccessItemRepository(
-                    $container->get(ActionAccessItem::class)
-                );
-            }
-        );
-        Yii::$container->set(
-            AuthItemRepository::class,
-            function ($container, $params, $config) {
-                return new AuthItemRepository(
-                    AuthItem::class,
-                    $container->get(DbManager::class)
+                return new AuthAssignmentRepository(
+                    $container->get(DBManager::class),
+                    $container->get(AuthAssignment::class)
                 );
             }
         );
@@ -106,6 +109,15 @@ class Bootstrap implements BootstrapInterface
             AuthItemChildRepository::class,
             function ($container, $params, $config) {
                 return new AuthItemChildRepository(AuthItemChild::class);
+            }
+        );
+        Yii::$container->set(
+            AuthItemRepository::class,
+            function ($container, $params, $config) {
+                return new AuthItemRepository(
+                    AuthItem::class,
+                    $container->get(DBManager::class)
+                );
             }
         );
         Yii::$container->set(
@@ -130,5 +142,12 @@ class Bootstrap implements BootstrapInterface
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param Module $module
+     */
+    protected function checkUserProvider(Module $module) {
+        return $module->userProvider instanceof UserProviderInterface;
     }
 }

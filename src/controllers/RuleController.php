@@ -3,7 +3,7 @@
 namespace nullref\rbac\controllers;
 
 use nullref\rbac\components\BaseController;
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
 use nullref\rbac\forms\RuleForm;
 use nullref\rbac\repositories\RuleRepository;
 use nullref\rbac\search\AuthRuleSearch;
@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
 
 class RuleController extends BaseController
 {
-    /** @var DbManager */
+    /** @var DBManager */
     private $manager;
 
     /** @var RuleRepository */
@@ -27,13 +27,13 @@ class RuleController extends BaseController
      * @param $id
      * @param $module
      * @param array $config
-     * @param DbManager $manager
+     * @param DBManager $manager
      */
     public function __construct(
         $id,
         $module,
         $config = [],
-        DbManager $manager,
+        DBManager $manager,
         RuleRepository $ruleRepository
     )
     {

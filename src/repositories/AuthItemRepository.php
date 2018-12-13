@@ -2,23 +2,23 @@
 
 namespace nullref\rbac\repositories;
 
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
 use yii\helpers\ArrayHelper;
 
 class AuthItemRepository extends AbstractRepository
 {
-    /** @var DbManager */
+    /** @var DBManager */
     private $manager;
 
     /**
      * AuthItemRepository constructor.
      *
      * @param $activeRecord
-     * @param DbManager $manager
+     * @param DBManager $manager
      */
     public function __construct(
         $activeRecord,
-        DbManager $manager
+        DBManager $manager
     )
     {
         $this->manager = $manager;

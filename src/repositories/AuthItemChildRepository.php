@@ -2,7 +2,7 @@
 
 namespace nullref\rbac\repositories;
 
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
 use yii\helpers\ArrayHelper;
 
 class AuthItemChildRepository extends AbstractRepository

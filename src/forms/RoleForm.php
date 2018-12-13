@@ -2,7 +2,7 @@
 
 namespace nullref\rbac\forms;
 
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
 use nullref\rbac\repositories\AuthItemRepository;
 
 class RoleForm extends ItemForm
@@ -14,12 +14,12 @@ class RoleForm extends ItemForm
      * RoleForm constructor.
      *
      * @param AuthItemRepository $repository
-     * @param DbManager $manager
+     * @param DBManager $manager
      * @param array $config
      */
     public function __construct(
         AuthItemRepository $repository,
-        DbManager $manager,
+        DBManager $manager,
         $config = []
     )
     {

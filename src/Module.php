@@ -5,6 +5,7 @@ namespace nullref\rbac;
 use nullref\core\interfaces\IAdminModule;
 use nullref\core\interfaces\IHasMigrateNamespace;
 use nullref\rbac\ar\User;
+use nullref\rbac\interfaces\UserProviderInterface;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\base\Application;
@@ -25,12 +26,10 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
         '@nullref/rbac/controllers',
     ];
 
-    /**
-     * @var string
-     */
-    public $userActiveRecordClass = User::class;
+    /** @var UserProviderInterface|null */
+    public $userProvider = null;
 
-    /** @var string */
+    /** @var @var string|null */
     public $userComponent = null;
 
     /** @var array */
@@ -41,8 +40,6 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
      */
     public $defaultClassMap = [
         //TODO
-        'Category'      => 'nullref\category\models\Category',
-        'CategoryQuery' => 'nullref\category\models\CategoryQuery',
     ];
 
     /**
@@ -60,6 +57,11 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
                     'label' => Yii::t('rbac', 'Actions access'),
                     'icon'  => FA::_MAP_SIGNS,
                     'url'   => '/rbac/access/',
+                ],
+                [
+                    'label' => Yii::t('rbac', 'Assignments'),
+                    'icon'  => FA::_GAVEL,
+                    'url'   => '/rbac/assignment/',
                 ],
                 [
                     'label' => Yii::t('rbac', 'Auth items'),

@@ -2,7 +2,7 @@
 
 namespace nullref\rbac\forms;
 
-use nullref\rbac\components\DbManager;
+use nullref\rbac\components\DBManager;
 use nullref\rbac\repositories\AuthItemRepository;
 use yii\rbac\Item;
 use Yii;
@@ -22,12 +22,12 @@ class PermissionForm extends ItemForm
      * RoleForm constructor.
      *
      * @param AuthItemRepository $repository
-     * @param DbManager $manager
+     * @param DBManager $manager
      * @param array $config
      */
     public function __construct(
         AuthItemRepository $repository,
-        DbManager $manager,
+        DBManager $manager,
         $config = []
     )
     {

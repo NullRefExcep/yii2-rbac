@@ -2,29 +2,31 @@
 
 namespace nullref\rbac\services;
 
+use nullref\rbac\components\DBManager;
+use nullref\rbac\repositories\AuthAssignmentRepository;
+use yii\helpers\ArrayHelper;
+
 class AssignmentService
 {
-    /** @var DbManager */
+    /** @var DBManager */
     private $manager;
 
     /** @var AuthAssignmentRepository */
-    private $repository;
+    private $authAssignmentRepository;
 
     /**
      * AssignmentService constructor.
      *
-     * @param DbManager $manager
-     * @param AuthAssignmentRepository $repository
+     * @param DBManager $manager
+     * @param AuthAssignmentRepository $authAssignmentRepository
      */
     public function __construct(
-        DbManager $manager,
-        AuthAssignmentRepository $repository
+        DBManager $manager,
+        AuthAssignmentRepository $authAssignmentRepository
     )
     {
         $this->manager = $manager;
-        $this->repository = $repository;
-
-        parent::__construct();
+        $this->authAssignmentRepository = $authAssignmentRepository;
     }
 
     /**
@@ -34,7 +36,7 @@ class AssignmentService
      */
     public function getUserAssignments(int $userId)
     {
-        return array_keys($this->manager->getItemsByUser($userId));
+        return array_keys($this->manager->getItemsByUserId($userId));
     }
 
     /**
@@ -45,7 +47,7 @@ class AssignmentService
      */
     public function updateAssignments(int $userId, array $items = [])
     {
-        return $this->repository->updateAssignments($userId, $items);
+        return $this->authAssignmentRepository->updateAssignments($userId, $items);
     }
 
     /**
