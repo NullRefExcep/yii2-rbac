@@ -14,10 +14,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="role-form">
-    <?php $form = ActiveForm::begin([
-        'enableClientValidation' => false,
-        'enableAjaxValidation'   => true,
-    ]) ?>
+    <?php $form = ActiveForm::begin() ?>
 
     <div class="row">
         <div class="col-md-12">

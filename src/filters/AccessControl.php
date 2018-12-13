@@ -4,6 +4,7 @@ namespace nullref\rbac\filters;
 
 use nullref\rbac\models\ActionAccess;
 use nullref\rbac\models\AuthItem;
+use nullref\rbac\repositories\ActionAccessRepository;
 use Yii;
 use yii\base\InlineAction;
 use yii\filters\AccessControl as BaseAccessControl;
@@ -15,10 +16,16 @@ use yii\web\Response;
 
 class AccessControl extends BaseAccessControl
 {
+    /** @var Controller */
     public $controller;
+
+    /** @var ActionAccessRepository */
+    protected $actionAccessRepository;
 
     public function init()
     {
+        $this->actionAccessRepository = Yii::$container->get(ActionAccessRepository::class);
+
         /** @var Controller $controller */
         $controllerClass = $this->controller;
         $module = $controllerClass->module->id;
@@ -49,16 +56,6 @@ class AccessControl extends BaseAccessControl
     {
         $rules = $this->rules;
 
-        //Remove
-        $rules[] = [
-            'allow'   => true,
-            'actions' => [
-                $action,
-            ],
-        ];
-        return $rules;
-        //Remove
-
         if (Yii::$app->user->isGuest) {
             $rules[] = [
                 'allow'   => false,
@@ -68,14 +65,12 @@ class AccessControl extends BaseAccessControl
             ];
         } else {
             /** @var ActionAccess $actionAccess */
-            $actionAccess = ActionAccess::find()
-                ->with(['authItems'])
-                ->where([
-                    'module'     => $module,
-                    'controller' => $controller,
-                    'action'     => $action,
-                ])
-                ->one();
+            $actionAccess = $this->actionAccessRepository
+                ->findOneByMCA(
+                    $module,
+                    $controller,
+                    $action
+                );
             if ($actionAccess) {
                 $newRule = [];
                 $roles = [];

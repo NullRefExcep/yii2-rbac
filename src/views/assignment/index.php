@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ], [
                                     'title'      => Yii::t('rbac', 'Assign'),
                                     'aria-label' => Yii::t('rbac', 'Assign'),
+                                    'data-pjax' => '0',
                                 ]);
                             },
                         ],

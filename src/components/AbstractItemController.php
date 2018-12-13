@@ -61,7 +61,7 @@ abstract class AbstractItemController extends BaseController
     /**
      * Shows create form.
      * @return string|Response
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionCreate()
     {
@@ -71,10 +71,10 @@ abstract class AbstractItemController extends BaseController
             'scenario' => 'create',
         ]);
 
-        $this->performAjaxValidation($model);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->save()) {
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('create', [
@@ -89,7 +89,7 @@ abstract class AbstractItemController extends BaseController
      *
      * @return string|Response
      * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionUpdate($name)
     {
@@ -101,10 +101,10 @@ abstract class AbstractItemController extends BaseController
             'item'     => $item,
         ]);
 
-        $this->performAjaxValidation($model);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->save()) {
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('update', [
@@ -126,21 +126,5 @@ abstract class AbstractItemController extends BaseController
         Yii::$app->authManager->remove($item);
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Performs ajax validation.
-     *
-     * @param Model $model
-     *
-     * @throws \yii\base\ExitException
-     */
-    protected function performAjaxValidation(Model $model)
-    {
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            echo json_encode(ActiveForm::validate($model));
-            Yii::$app->end();
-        }
     }
 }

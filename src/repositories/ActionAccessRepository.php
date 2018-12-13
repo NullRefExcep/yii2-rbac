@@ -35,6 +35,18 @@ class ActionAccessRepository extends AbstractRepository
             ->one();
     }
 
+    public function findOneByMCA($module, $controller, $action)
+    {
+        return $this->ar::find()
+            ->with(['authItems'])
+            ->where([
+                'module'     => $module,
+                'controller' => $controller,
+                'action'     => $action,
+            ])
+            ->one();
+    }
+
     public function assignItems($actionId, $items)
     {
         if (!is_array($items)) {

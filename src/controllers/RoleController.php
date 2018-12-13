@@ -21,7 +21,6 @@ class RoleController extends AbstractItemController
     
     public function actionIndex()
     {
-
         $searchModel = new AuthItemSearch(['type' => $this->type]);
         $dataProvider = $searchModel->search(Yii::$app->request->get());
 

@@ -16,10 +16,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="permission-form">
-    <?php $form = ActiveForm::begin([
-        'enableClientValidation' => false,
-        'enableAjaxValidation'   => true,
-    ]) ?>
+    <?php $form = ActiveForm::begin([]) ?>
 
     <?= $form->field($model, 'name') ?>
 

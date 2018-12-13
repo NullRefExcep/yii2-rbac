@@ -21,7 +21,7 @@ FancyTreeAsset::register($this);
 $this->registerJs(<<<JS
     var tree = jQuery("#fancyree_itemsTree");
     app.initTree = function () {
-        tree.fancytree("getTree").generateFormElements("ActionAccessForm[items][]");
+        tree.fancytree("getTree").generateFormElements("AssignmentForm[items][]");
     };
     app.selectTreeNode = app.initTree;
 JS
