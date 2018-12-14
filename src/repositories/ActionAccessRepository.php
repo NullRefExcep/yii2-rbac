@@ -95,7 +95,7 @@ class ActionAccessRepository extends AbstractRepository
     public function updateWithItems(ActionAccessForm $form, ActionAccess $actionAccess)
     {
         $actionAccess->module = $form->module;
-        $actionAccess->controller = $form->module;
+        $actionAccess->controller = $form->controller;
         $actionAccess->action = $form->action;
         if ($this->save($actionAccess)) {
             $this->assignItems($actionAccess->id, $form->items);

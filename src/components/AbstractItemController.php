@@ -60,15 +60,18 @@ abstract class AbstractItemController extends BaseController
 
     /**
      * Shows create form.
+     *
+     * @param string $parentName
+     *
      * @return string|Response
-     * @throws InvalidConfigException
      */
-    public function actionCreate()
+    public function actionCreate($parentName = '')
     {
         /** @var RoleForm|PermissionForm $model */
         $model = Yii::createObject([
-            'class'    => $this->modelClass,
-            'scenario' => 'create',
+            'class'      => $this->modelClass,
+            'scenario'   => 'create',
+            'parentName' => $parentName,
         ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {

@@ -19,6 +19,9 @@ abstract class ItemForm extends Model
     /** @var srting */
     public $description;
 
+    /** @var string */
+    public $parentName;
+
     /** @var array */
     public $children = [];
 
@@ -142,6 +145,11 @@ abstract class ItemForm extends Model
             $this->manager->add($this->item);
         } else {
             $this->manager->update($oldName, $this->item);
+        }
+
+        if ($this->parentName) {
+            $parent = $this->manager->getItem($this->parentName);
+            $this->manager->addChild($parent, $this->item);
         }
 
         $this->updateChildren();

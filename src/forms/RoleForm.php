@@ -4,26 +4,34 @@ namespace nullref\rbac\forms;
 
 use nullref\rbac\components\DBManager;
 use nullref\rbac\repositories\AuthItemRepository;
+use nullref\rbac\repositories\RoleRepository;
+use yii\rbac\Item;
 
 class RoleForm extends ItemForm
 {
     /** @var AuthItemRepository */
-    private $repository;
+    private $authItemRepository;
+
+    /** @var RoleRepository */
+    private $roleRepository;
 
     /**
      * RoleForm constructor.
      *
-     * @param AuthItemRepository $repository
+     * @param AuthItemRepository $authItemRepository
+     * @param RoleRepository $roleRepository
      * @param DBManager $manager
      * @param array $config
      */
     public function __construct(
-        AuthItemRepository $repository,
+        AuthItemRepository $authItemRepository,
+        RoleRepository $roleRepository,
         DBManager $manager,
         $config = []
     )
     {
-        $this->repository = $repository;
+        $this->authItemRepository = $authItemRepository;
+        $this->roleRepository = $roleRepository;
 
         parent::__construct($manager, $config);
     }
@@ -49,9 +57,14 @@ class RoleForm extends ItemForm
      */
     public function getUnassignedItems()
     {
-        return $this->repository->getUnassignedItems($this->item);
+        return $this->authItemRepository->getUnassignedItems($this->item, Item::TYPE_ROLE);
     }
 
+    /**
+     * @param string $name
+     *
+     * @return Item
+     */
     protected function createItem($name)
     {
         return $this->manager->createRole($name);

@@ -12,4 +12,13 @@ class AuthItemChildRepository extends AbstractRepository
         return $this->ar::find()->andWhere(['child' => $name])->one();
     }
 
+    public function addParent($name, $parentName)
+    {
+        $relation = new $this->authItemChildRepository->ar();
+        $relation->parent = $parentName;
+        $relation->child = $name;
+
+        return $this->save($relation);
+    }
+
 }

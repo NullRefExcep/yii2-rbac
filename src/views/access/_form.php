@@ -52,7 +52,7 @@ JS
                         '/rbac/access/controllers',
                         'selected' => $model->controller,
                     ]),
-                    'initialize'  => true,
+                    'initialize'  => !$isNew,
                 ],
             ]); ?>
 
@@ -66,7 +66,7 @@ JS
                         '/rbac/access/actions',
                         'selected' => $model->action,
                     ]),
-                    'initialize'  => true,
+                    'initialize'  => !$isNew,
                 ],
             ]); ?>
         </div>

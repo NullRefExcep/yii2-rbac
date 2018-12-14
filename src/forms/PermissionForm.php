@@ -4,6 +4,7 @@ namespace nullref\rbac\forms;
 
 use nullref\rbac\components\DBManager;
 use nullref\rbac\repositories\AuthItemRepository;
+use nullref\rbac\repositories\PermissionRepository;
 use yii\rbac\Item;
 use Yii;
 
@@ -16,22 +17,29 @@ class PermissionForm extends ItemForm
     public $data;
 
     /** @var AuthItemRepository */
-    private $repository;
+    private $authItemRepository;
+
+    /** @var PermissionRepository */
+    private $permissionRepository;
+
 
     /**
      * RoleForm constructor.
      *
-     * @param AuthItemRepository $repository
+     * @param AuthItemRepository $authItemRepository
+     * @param PermissionRepository $permissionRepository
      * @param DBManager $manager
      * @param array $config
      */
     public function __construct(
-        AuthItemRepository $repository,
+        AuthItemRepository $authItemRepository,
+        PermissionRepository $permissionRepository,
         DBManager $manager,
         $config = []
     )
     {
-        $this->repository = $repository;
+        $this->authItemRepository = $authItemRepository;
+        $this->permissionRepository = $permissionRepository;
 
         parent::__construct($manager, $config);
     }
@@ -88,11 +96,19 @@ class PermissionForm extends ItemForm
         ]);
     }
 
+    /**
+     * @return mixed
+     */
     public function getUnassignedItems()
     {
         return $this->repository->getUnassignedItems($this->item, Item::TYPE_PERMISSION);
     }
 
+    /**
+     * @param string $name
+     *
+     * @return Item
+     */
     protected function createItem($name)
     {
         return $this->manager->createPermission($name);
