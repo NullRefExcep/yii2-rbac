@@ -6,6 +6,7 @@ use nullref\rbac\components\DBManager;
 use nullref\rbac\repositories\AuthItemRepository;
 use yii\base\Model;
 use yii\rbac\Rule;
+use Yii;
 
 class RuleForm extends Model
 {
@@ -21,23 +22,22 @@ class RuleForm extends Model
     /** @var srting */
     private $oldName;
 
-    /** @var AuthItemRepository */
-    private $repository;
+    /** @var DBManager */
+    private $manager;
 
     /**
      * RoleForm constructor.
      *
-     * @param AuthItemRepository $repository
+     * @param AuthItemRepository $authItemRepository
      * @param DBManager $manager
      * @param array $config
      */
     public function __construct(
-        AuthItemRepository $repository,
         DBManager $manager,
         $config = []
     )
     {
-        $this->repository = $repository;
+        $this->manager = $manager;
 
         parent::__construct($config);
     }
@@ -76,7 +76,7 @@ class RuleForm extends Model
                     if ($this->name == $this->oldName) {
                         return;
                     }
-                    $rule = $this->authManager->getRule($this->name);
+                    $rule = $this->manager->getRule($this->name);
 
                     if ($rule instanceof \yii\rbac\Rule) {
                         $this->addError('name', Yii::t('rbac', 'Name is already in use'));
@@ -126,8 +126,8 @@ class RuleForm extends Model
             'name'  => $this->name,
         ]);
 
-        $this->authManager->add($rule);
-        $this->authManager->invalidateCache();
+        $this->manager->add($rule);
+        $this->manager->invalidateCache();
 
         return true;
     }
@@ -153,9 +153,14 @@ class RuleForm extends Model
             'name'  => $this->name,
         ]);
 
-        $this->authManager->update($this->oldName, $rule);
-        $this->authManager->invalidateCache();
+        $this->manager->update($this->oldName, $rule);
+        $this->manager->invalidateCache();
 
         return true;
+    }
+
+    public function setOldName($oldName)
+    {
+        $this->oldName = $oldName;
     }
 }

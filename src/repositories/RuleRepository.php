@@ -13,7 +13,10 @@ class RuleRepository extends AbstractRepository
             ->limit(10);
 
         if ($searchQuery) {
-            $query->where(['LIKE', 'LOWER(name)', mb_strtolower($searchQuery)]);
+            $query->orWhere(['LIKE', 'LOWER(name)', mb_strtolower($searchQuery)]);
+            $query->orWhere(['LIKE', 'name', '%' . $searchQuery]);
+            $query->orWhere(['LIKE', 'name', $searchQuery . '%']);
+            $query->orWhere(['LIKE', 'name', '%' . $searchQuery . '%']);
         }
 
         return $query->all();

@@ -11,6 +11,7 @@ use yii\widgets\ActiveForm;
 /**
  * @var $this  View
  * @var $model PermissionForm
+ * @var $rules array
  */
 
 ?>
@@ -23,15 +24,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'description')->textarea() ?>
 
     <?= $form->field($model, 'rule')->widget(Select2::class, [
-        'options'       => [
+        'data'    => $rules,
+        'options' => [
+            'id'       => 'rule',
             'placeholder' => Yii::t('rbac', 'Select rule'),
-        ],
-        'pluginOptions' => [
-            'ajax'       => [
-                'url'  => Url::to(['/rbac/rule/search']),
-                'data' => new JsExpression('function(params) { return {q:params.term}; }'),
-            ],
-            'allowClear' => true,
+            'multiple' => false,
         ],
     ]) ?>
 

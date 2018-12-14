@@ -23,10 +23,10 @@ class PermissionController extends AbstractItemController
     protected $type = Item::TYPE_PERMISSION;
 
     /** @var AuthItemRepository */
-    private $aiRepository;
+    private $authItemRepository;
 
     /** @var RuleRepository */
-    private $rRepository;
+    protected $ruleRepository;
 
     public function __construct(
         $id,
@@ -36,8 +36,8 @@ class PermissionController extends AbstractItemController
         RuleRepository $ruleRepository
     )
     {
-        $this->aiRepository = $authItemRepository;
-        $this->rRepository = $ruleRepository;
+        $this->authItemRepository = $authItemRepository;
+        $this->ruleRepository = $ruleRepository;
 
         parent::__construct($id, $module, $config);
     }
@@ -50,8 +50,8 @@ class PermissionController extends AbstractItemController
         return $this->render('index', [
             'searchModel'  => $searchModel,
             'dataProvider' => $dataProvider,
-            'items'        => $this->aiRepository->getMapByType($this->type, 'name', 'description'),
-            'rules'        => $this->rRepository->getMap('name', 'name'),
+            'items'        => $this->authItemRepository->getMapByType($this->type, 'name', 'description'),
+            'rules'        => $this->ruleRepository->getMap('name', 'name'),
         ]);
     }
     

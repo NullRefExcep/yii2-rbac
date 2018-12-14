@@ -11,6 +11,7 @@ use nullref\rbac\ar\AuthRule;
 use nullref\rbac\ar\Permission;
 use nullref\rbac\ar\Role;
 use nullref\rbac\components\DBManager;
+use nullref\rbac\components\RuleManager;
 use nullref\rbac\interfaces\UserProviderInterface;
 use nullref\rbac\repositories\ActionAccessItemRepository;
 use nullref\rbac\repositories\ActionAccessRepository;
@@ -52,6 +53,11 @@ class Bootstrap implements BootstrapInterface
         if ($module->userComponent === null) {
             throw new InvalidConfigException(Module::class . '::userComponent has to be set');
         }
+
+        if ($module->ruleManager === null) {
+            $module->ruleManager = RuleManager::class;
+        }
+        $module->ruleManager = new $module->ruleManager();
 
         $classMap = array_merge($module->defaultClassMap, $module->classMap);
         //TODO
@@ -168,6 +174,8 @@ class Bootstrap implements BootstrapInterface
 
     /**
      * @param Module $module
+     *
+     * @return bool
      */
     protected function checkUserProvider(Module $module) {
         return $module->userProvider instanceof UserProviderInterface;

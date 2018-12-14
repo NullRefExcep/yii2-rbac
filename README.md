@@ -1,19 +1,26 @@
 Yii2 RBAC
 ===============
 
-Advanced RBAC superstructure on yii2 RBAC
-(inspired by Dektrium extension)
+Advanced RBAC superstructure on yii2 RBAC, Dektrium extension
 
 Set up
 
-In modules configuration on 'rbac' section you need to specify
-userProvider class which implements interface
+In modules configuration on 'rbac' section you 
+- need to specify userProvider class which implements interface
 ```
 nullref\rbac\interfaces\UserProviderInterface
 ```
-and create getUsers() method which has to return array of users with
+with getUsers() method which has to return array of users with
 required fields ['id', 'username']
 
+- may to override ruleManager class which implements interface
+```
+nullref\rbac\interfaces\RuleManagerInterface
+```
+with getList() method, there is RuleManager in module
+```
+nullref\rbac\components\RuleManager
+```
 
 Your modules configuration. In `Module.php` add array with aliases for module controllers
 

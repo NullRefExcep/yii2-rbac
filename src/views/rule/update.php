@@ -1,12 +1,14 @@
 <?php
 
 use nullref\rbac\forms\RuleForm;
+use nullref\rbac\interfaces\RuleManagerInterface;
 use yii\helpers\Html;
 use yii\web\View;
 
 /**
  * @var $this  View
  * @var $model RuleForm
+ * @var $ruleManager RuleManagerInterface
  */
 
 $this->title = Yii::t('rbac', 'Update rule');
@@ -30,9 +32,10 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <?= $this->render('_form', [
-                'model' => $model,
+                'model'       => $model,
+                'ruleManager' => $ruleManager,
             ]) ?>
         </div>
     </div>

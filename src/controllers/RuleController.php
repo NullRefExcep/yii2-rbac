@@ -4,11 +4,13 @@ namespace nullref\rbac\controllers;
 
 use nullref\rbac\components\BaseController;
 use nullref\rbac\components\DBManager;
+use nullref\rbac\components\RuleManager;
 use nullref\rbac\forms\RuleForm;
 use nullref\rbac\repositories\RuleRepository;
 use nullref\rbac\search\AuthRuleSearch;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\rbac\Rule;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -19,7 +21,10 @@ class RuleController extends BaseController
     private $manager;
 
     /** @var RuleRepository */
-    private $rRepository;
+    private $ruleRepository;
+
+    /** @var RuleManager */
+    private $ruleManager;
 
     /**
      * RuleController constructor.
@@ -28,6 +33,7 @@ class RuleController extends BaseController
      * @param $module
      * @param array $config
      * @param DBManager $manager
+     * @param RuleRepository $ruleRepository
      */
     public function __construct(
         $id,
@@ -38,7 +44,9 @@ class RuleController extends BaseController
     )
     {
         $this->manager = $manager;
-        $this->rRepository = $ruleRepository;
+        $this->ruleRepository = $ruleRepository;
+
+        $this->ruleManager = $module->ruleManager;
 
         parent::__construct($id, $module, $config);
     }
@@ -67,13 +75,10 @@ class RuleController extends BaseController
      */
     public function actionCreate()
     {
-        $model = $this->getModel(RuleForm::SCENARIO_CREATE);
-
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            return ActiveForm::validate($model);
-        }
+        $model = Yii::createObject([
+            'class'    => RuleForm::class,
+            'scenario' => RuleForm::SCENARIO_CREATE,
+        ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->create()) {
             Yii::$app->session->setFlash('success', Yii::t('rbac', 'Rule has been added'));
@@ -82,7 +87,8 @@ class RuleController extends BaseController
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model'       => $model,
+            'ruleManager' => $this->ruleManager,
         ]);
     }
 
@@ -96,7 +102,10 @@ class RuleController extends BaseController
      */
     public function actionUpdate($name)
     {
-        $model = $this->getModel(RuleForm::SCENARIO_UPDATE);
+        $model = Yii::createObject([
+            'class'    => RuleForm::class,
+            'scenario' => RuleForm::SCENARIO_UPDATE,
+        ]);
         $rule = $this->findRule($name);
 
         $model->setOldName($name);
@@ -105,12 +114,6 @@ class RuleController extends BaseController
             'class' => get_class($rule),
         ]);
 
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            return ActiveForm::validate($model);
-        }
-
         if ($model->load(Yii::$app->request->post()) && $model->update()) {
             Yii::$app->session->setFlash('success', Yii::t('rbac', 'Rule has been updated'));
 
@@ -118,7 +121,8 @@ class RuleController extends BaseController
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'model'       => $model,
+            'ruleManager' => $this->ruleManager,
         ]);
     }
 
@@ -154,22 +158,8 @@ class RuleController extends BaseController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         return [
-            'results' => $this->rRepository->getRuleNames($q),
+            'results' => $this->ruleRepository->getRuleNames($q),
         ];
-    }
-
-    /**
-     * @param  string $scenario
-     *
-     * @return Rule
-     * @throws InvalidConfigException
-     */
-    private function getModel($scenario)
-    {
-        return Yii::createObject([
-            'class'    => RuleForm::class,
-            'scenario' => $scenario,
-        ]);
     }
 
     /**

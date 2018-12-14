@@ -4,6 +4,7 @@ namespace nullref\rbac\components;
 
 use nullref\rbac\forms\PermissionForm;
 use nullref\rbac\forms\RoleForm;
+use nullref\rbac\repositories\RuleRepository;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -20,15 +21,14 @@ abstract class AbstractItemController extends BaseController
      */
     abstract protected function getItem($name);
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $type;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $modelClass;
+
+    /** @var RuleRepository */
+    protected $ruleRepository;
 
     /**
      * @throws InvalidConfigException
@@ -42,6 +42,8 @@ abstract class AbstractItemController extends BaseController
         if ($this->type === null) {
             throw new InvalidConfigException('Auth item type should be set');
         }
+
+        $this->ruleRepository = Yii::$container->get(RuleRepository::class);
     }
 
     /**
@@ -80,8 +82,10 @@ abstract class AbstractItemController extends BaseController
             }
         }
 
+
         return $this->render('create', [
             'model' => $model,
+            'rules' => $this->ruleRepository->getMap('name', 'name'),
         ]);
     }
 
@@ -112,6 +116,7 @@ abstract class AbstractItemController extends BaseController
 
         return $this->render('update', [
             'model' => $model,
+            'rules' => $this->ruleRepository->getMap('name', 'name'),
         ]);
     }
 

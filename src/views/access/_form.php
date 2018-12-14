@@ -32,7 +32,7 @@ JS
 
 ?>
 
-<div class="Action-access-form">
+<div class="action-access-form">
 
     <?php $form = ActiveForm::begin(); ?>
 

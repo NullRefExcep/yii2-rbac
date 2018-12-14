@@ -5,6 +5,7 @@ use yii\web\View;
 
 /**
  * @var $model PermissionForm
+ * @var $rules array
  * @var $this  View
  */
 
@@ -31,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-6">
             <?= $this->render('_form', [
                 'model' => $model,
+                'rules' => $rules,
             ]) ?>
         </div>
     </div>

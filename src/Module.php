@@ -5,26 +5,23 @@ namespace nullref\rbac;
 use nullref\core\interfaces\IAdminModule;
 use nullref\core\interfaces\IHasMigrateNamespace;
 use nullref\rbac\ar\User;
+use nullref\rbac\components\RuleManager;
 use nullref\rbac\interfaces\UserProviderInterface;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
 use yii\base\Module as BaseModule;
-use yii\i18n\PhpMessageSource;
-use yii\web\Application as WebApplication;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class Module
  *
- * @package nullref\category
+ * @package nullref\rbac
  */
 class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
 {
-    /** @var array  */
-    public $controllerAliases = [
-        '@nullref/rbac/controllers',
-    ];
+    public $loginUrl = '/user/login';
 
     /** @var UserProviderInterface|null */
     public $userProvider = null;
@@ -32,15 +29,19 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
     /** @var @var string|null */
     public $userComponent = null;
 
+    /** @var RuleManager */
+    public $ruleManager;
+
+    /** @var array */
+    public $controllerAliases = [
+        '@nullref/rbac/controllers',
+    ];
+
     /** @var array */
     public $classMap = [];
 
-    /**
-     * @var array
-     */
-    public $defaultClassMap = [
-        //TODO
-    ];
+    /** @var array */
+    public $defaultClassMap = [];
 
     /**
      * Item for admin menu

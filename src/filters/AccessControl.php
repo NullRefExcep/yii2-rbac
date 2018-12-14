@@ -49,6 +49,7 @@ class AccessControl extends BaseAccessControl
 
             return $controller->redirect(Yii::$app->request->referrer);
         };
+
         parent::init();
     }
 
