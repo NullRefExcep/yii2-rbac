@@ -101,7 +101,7 @@ class PermissionForm extends ItemForm
      */
     public function getUnassignedItems()
     {
-        return $this->repository->getUnassignedItems($this->item, Item::TYPE_PERMISSION);
+        return $this->authItemRepository->getUnassignedItems($this->item, Item::TYPE_PERMISSION);
     }
 
     /**
