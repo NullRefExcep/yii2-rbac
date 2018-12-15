@@ -36,13 +36,6 @@ class m170417_145342_rbac_create_basic_roles extends Migration
             ['administrator', 'dashboard'],
 
         ]);
-
-        //TODO
-//        $this->insert($authManager->assignmentTable, [
-//            'item_name' => 'administrator',
-//            'user_id' => $user->id,
-//            'created_at' => $time,
-//        ]);
     }
 
     public function down()
