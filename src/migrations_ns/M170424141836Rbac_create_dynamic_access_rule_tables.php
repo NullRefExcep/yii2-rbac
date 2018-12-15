@@ -1,6 +1,6 @@
 <?php
 
-namespace nullref\rbac\migrations;
+namespace nullref\rbac\migrations_ns;
 
 use nullref\core\traits\MigrationTrait;
 use yii\db\Migration;

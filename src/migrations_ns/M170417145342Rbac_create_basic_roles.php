@@ -1,6 +1,6 @@
 <?php
 
-namespace nullref\rbac\migrations;
+namespace nullref\rbac\migrations_ns;
 
 use nullref\rbac\ar\AuthItem;
 use nullref\rbac\ar\AuthItemChild;

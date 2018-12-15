@@ -1,6 +1,6 @@
 <?php
 
-namespace nullref\rbac\migrations;
+namespace nullref\rbac\migrations_ns;
 
 use yii\base\InvalidConfigException;
 use yii\db\Migration;
