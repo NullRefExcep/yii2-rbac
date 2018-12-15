@@ -97,6 +97,6 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
      */
     public function getMigrationNamespaces($defaults)
     {
-        return ['nullref\rbac\migration_ns'];
+        return ['nullref\rbac\migrations_ns'];
     }
 }
