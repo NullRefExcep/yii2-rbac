@@ -2,11 +2,12 @@
 
 namespace nullref\rbac\filters;
 
-use nullref\rbac\models\ActionAccess;
-use nullref\rbac\models\AuthItem;
+use nullref\rbac\ar\ActionAccess;
+use nullref\rbac\ar\AuthItem;
 use nullref\rbac\repositories\ActionAccessRepository;
 use Yii;
 use yii\base\InlineAction;
+use yii\base\InvalidConfigException;
 use yii\filters\AccessControl as BaseAccessControl;
 use yii\filters\AccessRule;
 use yii\helpers\ArrayHelper;
@@ -22,8 +23,22 @@ class AccessControl extends BaseAccessControl
     /** @var ActionAccessRepository */
     protected $actionAccessRepository;
 
+    /** @var string */
+    protected $userComponent;
+
     public function init()
     {
+        $moduleUserComponent = Yii::$app->getModule('rbac')->userComponent;
+        try {
+            $this->userComponent = Yii::$app->{$moduleUserComponent};
+        } catch (\Exception $e) {
+            try {
+                $this->userComponent = Yii::$app->getModule($moduleUserComponent);
+            } catch (\Exception $e) {
+                throw new InvalidConfigException('Bad userComponent provided');
+            }
+        }
+
         $this->actionAccessRepository = Yii::$container->get(ActionAccessRepository::class);
 
         /** @var Controller $controller */
@@ -41,7 +56,7 @@ class AccessControl extends BaseAccessControl
          */
         $this->denyCallback = function ($rule, $action) {
             $controller = $action->controller;
-            if (Yii::$app->user->isGuest) {
+            if ($this->userComponent->isGuest) {
                 return $controller->redirect('/user/login');
             }
             Yii::$app->session->setFlash('warning', Yii::t('rbac', 'You don\'t have permission to')
@@ -56,8 +71,9 @@ class AccessControl extends BaseAccessControl
     public function getRules($module, $controller, $action)
     {
         $rules = $this->rules;
+        $isUserGuest = $this->userComponent->isGuest;
 
-        if (Yii::$app->user->isGuest) {
+        if ($isUserGuest) {
             $rules[] = [
                 'allow'   => false,
                 'actions' => [
@@ -121,7 +137,7 @@ class AccessControl extends BaseAccessControl
                     ],
                 ];
             }
-            if (!count($rules) && !Yii::$app->user->isGuest) {
+            if (!count($rules) && !$isUserGuest) {
                 $rules[] = [
                     'allow'   => true,
                     'actions' => [
@@ -133,5 +149,4 @@ class AccessControl extends BaseAccessControl
 
         return $rules;
     }
-
 }
