@@ -60,6 +60,11 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
                     'url'   => '/rbac/access/',
                 ],
                 [
+                    'label' => Yii::t('rbac', 'Elements access'),
+                    'icon'  => FA::_EXTERNAL_LINK,
+                    'url'   => '/rbac/element/',
+                ],
+                [
                     'label' => Yii::t('rbac', 'Assignments'),
                     'icon'  => FA::_GAVEL,
                     'url'   => '/rbac/assignment/',
