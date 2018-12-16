@@ -13,6 +13,9 @@
         "yiisoft/yii2": ">=2.0.4",
         "yiisoft/yii2-jui": "^2.0"
     },
+    "require-dev": {
+        "yiisoft/yii2-gii": "*"
+    },
     "autoload": {
         "psr-4": {
             "nullref\\rbac\\": "src/"

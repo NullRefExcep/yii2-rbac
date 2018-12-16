@@ -37,6 +37,9 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
         '@nullref/rbac/controllers',
     ];
 
+    /** @var array  */
+    public $viewPathAliases = [];
+
     /** @var array */
     public $classMap = [];
 

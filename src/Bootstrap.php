@@ -28,7 +28,9 @@ use nullref\rbac\repositories\RuleRepository;
 use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
+use yii\base\Event;
 use yii\base\InvalidConfigException;
+use yii\gii\Module as GiiModule;
 use yii\i18n\PhpMessageSource;
 use yii\web\Application as WebApplication;
 
@@ -78,6 +80,20 @@ class Bootstrap implements BootstrapInterface
                     'basePath' => '@nullref/rbac/messages',
                 ];
             }
+        }
+
+        if ($app->hasModule('gii')) {
+            Event::on(
+                GiiModule::class,
+                GiiModule::EVENT_BEFORE_ACTION,
+                function (Event $event) {
+                    /** @var GiiModule $gii */
+                    $gii = $event->sender;
+                    $gii->generators['element-identificator'] = [
+                        'class' => 'nullref\rbac\generators\element_identificator\Generator',
+                    ];
+                }
+            );
         }
 
         if ($this->checkModuleInstalled($app)) {
@@ -198,7 +214,8 @@ class Bootstrap implements BootstrapInterface
      *
      * @return bool
      */
-    protected function checkUserProvider(Module $module) {
+    protected function checkUserProvider(Module $module)
+    {
         return $module->userProvider instanceof UserProviderInterface;
     }
 }
