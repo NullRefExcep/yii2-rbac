@@ -8,6 +8,8 @@ use nullref\rbac\ar\AuthAssignment;
 use nullref\rbac\ar\AuthItem;
 use nullref\rbac\ar\AuthItemChild;
 use nullref\rbac\ar\AuthRule;
+use nullref\rbac\ar\FieldAccess;
+use nullref\rbac\ar\FieldAccessItem;
 use nullref\rbac\ar\Permission;
 use nullref\rbac\ar\Role;
 use nullref\rbac\components\DBManager;
@@ -18,6 +20,8 @@ use nullref\rbac\repositories\ActionAccessRepository;
 use nullref\rbac\repositories\AuthAssignmentRepository;
 use nullref\rbac\repositories\AuthItemChildRepository;
 use nullref\rbac\repositories\AuthItemRepository;
+use nullref\rbac\repositories\FieldAccessItemRepository;
+use nullref\rbac\repositories\FieldAccessRepository;
 use nullref\rbac\repositories\PermissionRepository;
 use nullref\rbac\repositories\RoleRepository;
 use nullref\rbac\repositories\RuleRepository;
@@ -136,6 +140,23 @@ class Bootstrap implements BootstrapInterface
                 return new RoleRepository(
                     $container->get(Role::class),
                     $container->get(AuthItemChildRepository::class)
+                );
+            }
+        );
+        Yii::$container->set(
+            FieldAccessItemRepository::class,
+            function ($container, $params, $config) {
+                return new FieldAccessItemRepository(
+                    $container->get(FieldAccessItem::class)
+                );
+            }
+        );
+        Yii::$container->set(
+            FieldAccessRepository::class,
+            function ($container, $params, $config) {
+                return new FieldAccessRepository(
+                    $container->get(FieldAccessItemRepository::class),
+                    $container->get(FieldAccess::class)
                 );
             }
         );
