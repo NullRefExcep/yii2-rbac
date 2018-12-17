@@ -42,32 +42,32 @@ class ViewWriterService
             //Regular match
             if ($isRegularUse) {
                 $rMatch = [];
-                $pattern = '/' . self::ELEMENT_CLASS . '\:\:/';
-                if (preg_match($pattern, $currentFile, $rMatch, PREG_OFFSET_CAPTURE)) {
-                    if (count($rMatch)) {
+                $pattern = '/(?<!\\\)(?=[\s]*)' . self::ELEMENT_CLASS . '\:\:/';
+                if (preg_match_all($pattern, $currentFile, $rMatch, PREG_OFFSET_CAPTURE)) {
+                    if (isset($rMatch[0])) {
                         $pattern = self::ELEMENT_CLASS;
-                        $currentFile = $this->processTag($currentFile, $rMatch, $pattern);
+                        $currentFile = $this->processTag($currentFile, $rMatch[0], $pattern);
                     }
                 }
             }
             //Regular alias match
             if ($isRegularAliasUse) {
                 $rAMacth = [];
-                $pattern = '/' . $aliasUse . '\:\:/';
-                if (preg_match($pattern, $currentFile, $rAMacth, PREG_OFFSET_CAPTURE)) {
+                $pattern = '/(?<!\\\)(?=[\s]*)' . $aliasUse . '\:\:/';
+                if (preg_match_all($pattern, $currentFile, $rAMacth, PREG_OFFSET_CAPTURE)) {
                     if (isset($rAMacth[0])) {
                         $pattern = $aliasUse;
-                        $currentFile = $this->processTag($currentFile, $rAMacth, $pattern);
+                        $currentFile = $this->processTag($currentFile, $rAMacth[0], $pattern);
                     }
                 }
             }
             //Namespace match
             $nMatch = [];
             $pattern = '/' . self::ELEMENT_PATTERN_2 . '\:\:/';
-            if (preg_match($pattern, $currentFile, $nMatch, PREG_OFFSET_CAPTURE)) {
-                if (isset($rAMacth[0])) {
+            if (preg_match_all($pattern, $currentFile, $nMatch, PREG_OFFSET_CAPTURE)) {
+                if (isset($nMatch[0])) {
                     $pattern = self::ELEMENT_PATTERN_2;
-                    $currentFile = $this->processTag($currentFile, $nMatch, $pattern);
+                    $currentFile = $this->processTag($currentFile, $nMatch[0], $pattern);
                 }
             }
             $files[] = [
@@ -111,21 +111,32 @@ class ViewWriterService
             $currentPosition = $match[1] + $offset;
             $length = strlen($currentFile);
             $subSrting = substr($currentFile, $currentPosition, $length);
-            //find full tag
+            //Find full tag
             $fullTag = [];
             $innerPattern = '/' . $pattern . '\:\:[A-Za-z]*\({1}.*\)/';
             if (preg_match($innerPattern, $subSrting, $fullTag)) {
                 if (count($fullTag)) {
                     $fullTag = $fullTag[0];
                     $fullTagLength = strlen($fullTag);
-                    //find tag name
+                    //Find tag name
                     $tagName = [];
                     $tagPattern = '/' . $pattern . '\:\:([A-Za-z]*)\({1}/';
                     if (preg_match($tagPattern, $fullTag, $tagName)) {
                         if (isset($tagName[1])) {
-                            //find tag name
+                            //Find tag name
                             $tagName = $tagName[1];
                             $endOfOption = [];
+                            //Find ends on ')
+                            $optionPattern = "/(?<=(\'))(\))/";
+                            $position = false;
+                            if (preg_match($optionPattern, $fullTag, $endOfOption, PREG_OFFSET_CAPTURE)) {
+                                if (isset($endOfOption[2])) {
+                                    $position = $endOfOption[2][1];
+                                }
+                            }
+                            //Find arrays
+                            $optionPattern = "/(?<=\[)([A-Za-z,=> \[\]'\"]*)(?=\])?";
+                            //Find ends on ])
                             $optionPattern = '/\,[\s]*\[(.*?)(\][\s]*\))/';
                             $position = false;
                             if (preg_match($optionPattern, $fullTag, $endOfOption, PREG_OFFSET_CAPTURE)) {
@@ -150,6 +161,38 @@ class ViewWriterService
         }
 
         return $currentFile;
+    }
+
+    private function addIdentificator() {
+        $endOfOption = [];
+        //Find ends on ')
+        $optionPattern = "/(?<=(\'))\)/";
+        $position = false;
+        if (preg_match($optionPattern, $fullTag, $endOfOption, PREG_OFFSET_CAPTURE)) {
+            if (isset($endOfOption[2])) {
+                $position = $endOfOption[2][1];
+            }
+        }
+        //Find ends on ])
+        $optionPattern = '/\,[\s]*\[(.*?)(\][\s]*\))/';
+        $position = false;
+        if (preg_match($optionPattern, $fullTag, $endOfOption, PREG_OFFSET_CAPTURE)) {
+            if (isset($endOfOption[2])) {
+                $position = $endOfOption[2][1];
+            }
+        }
+
+        if ($position !== false) {
+            $identificator = $this->generateIdentificator($tagName);
+            $identificatorLength = strlen($identificator);
+            $offset += $identificatorLength;
+            $currentFile =
+                substr($currentFile, 0, $currentPosition + $position) .
+                $identificator .
+                substr($currentFile, $currentPosition + $position);
+        }
+
+        return 1;
     }
 
     private function generateIdentificator($tagName)

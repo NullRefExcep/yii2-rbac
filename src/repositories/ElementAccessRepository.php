@@ -39,7 +39,7 @@ class ElementAccessRepository extends AbstractRepository
     {
         $element = $this->findOneByCondition(['identificator' => $identificator]);
         if ($element) {
-            $this->elementAccessItemRepository->findActionItems($element->id);
+            return $this->elementAccessItemRepository->findActionItems($element->id);
         }
 
         return [];

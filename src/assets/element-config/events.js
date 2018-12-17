@@ -2,13 +2,11 @@ jQuery(function () {
     let body = jQuery('body');
     let modalPlacement = body.find('.element-config-modal-outer');
 
-    let modalCallButton = body.find('.modal-control');
-
     let elements = body.find('[data-identificator]');
     elements.click(function (e) {
         e.preventDefault();
         let current = jQuery(this);
-        loadModal(current.data('identificator'));
+        loadModal(current);
         return false;
     });
     elements.dblclick(function () {
@@ -16,23 +14,21 @@ jQuery(function () {
         current.click();
     });
 
-    let loadModal = function (identificator) {
+    let loadModal = function (caller) {
+        let identificator = caller.data('identificator');
         jQuery.ajax({
             method: 'GET',
             url: '/rbac/element/element-config',
             data: {
                 'identificator': identificator
             }
-        }).success(function (response) {
+        }).success(function(response) {
             modalPlacement.html(response);
             modalPlacement.addClass('shown');
-
-            var tree = body.find("#fancyree_itemsTree");
-            app.initTree = function () {
-                tree.fancytree("getTree").generateFormElements("ElementAccessForm[items][]");
-            };
-            app.selectTreeNode = app.initTree;
+            body.find('.modal-header h3').text(identificator);
+            let form = body.find('#elementConfigForm');
+            form.prop('action', form.prop('action') + '?identificator=' + identificator);
+            body.find('#elementIdentificator').val(identificator);
         });
-
     }
 });

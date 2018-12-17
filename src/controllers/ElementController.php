@@ -15,6 +15,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * ElementController implements the CRUD actions for ElementAccess model.
@@ -79,7 +80,7 @@ class ElementController extends BaseController
         }
 
         $model = $this->elementAccessForm;
-        $ar = $this->elementAccessRepository->findByCondition(['identificator' => $identificator]);
+        $ar = $this->elementAccessRepository->findOneByCondition(['identificator' => $identificator]);
         if ($ar) {
             $model->loadWithAR($ar);
             $tree = $this->authTree->getArrayAuthTreeStructure(
@@ -99,28 +100,38 @@ class ElementController extends BaseController
         ]);
     }
 
-    public function actionSaveAjax()
+    public function actionSaveAjax($identificator)
     {
-//        $ar = $this->elementAccessRepository->findByCondition(['identificator' => $identificator]);
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
 
         $model = $this->elementAccessForm;
-        $model->loadWithAR($ar);
+        $ar = $this->elementAccessRepository->findOneByCondition(['identificator' => $identificator]);
 
-        $tree = $this->authTree->getArrayAuthTreeStructure(
-            $this->authTree->getAuthTree(),
-            $this->elementAccessService->getItems($ar)
-        );
-        $types = [];
-
-        if ($model->load(Yii::$app->request->post()) && $updateId = $model->update($ar)) {
-            return $this->redirect(['view', 'id' => $updateId]);
+        $result = false;
+        if ($ar) {
+            $model->loadWithAR($ar);
+            if ($model->load(Yii::$app->request->post()) && $updateId = $model->update($ar)) {
+                $result = [
+                    'status' => 'success',
+                ];
+            }
         } else {
-            return $this->render('update', [
-                'model'         => $model,
-                'tree'          => $tree,
-                'types'         => $types,
-                'elementAccess' => $ar,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $saveId = $model->save()) {
+                $result = [
+                    'status' => 'success',
+                ];
+            }
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        if ($result) {
+            return $result;
+        } else {
+            return [
+                'status' => 'error',
+            ];
         }
     }
 
