@@ -12,12 +12,14 @@ class ElementHtml extends BaseHtml
 
     public static function tag($name, $content = '', $options = [])
     {
-        $result = parent::tag($name, $content = '', $options = []);
+        $result = parent::tag($name, $content, $options);
         if (isset($options['data-identificator'])) {
             if (static::$elementCheckerService instanceof ElementCheckerService) {
                 if (!static::$elementCheckerService->isAllowed($options['data-identificator'])) {
                     $result = '';
                 }
+            } else {
+                return $result;
             }
         }
 

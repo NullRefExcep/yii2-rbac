@@ -17,7 +17,7 @@ $this->title = Yii::t('rbac', 'Update {modelClass}: ', [
         'modelClass' => 'Element Access',
     ]) . ' ' . $elementAccess->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Element Access`s'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $elementAccess->id, 'url' => ['view', 'id' => $actionAccess->id]];
+$this->params['breadcrumbs'][] = ['label' => $elementAccess->id, 'url' => ['view', 'id' => $elementAccess->id]];
 $this->params['breadcrumbs'][] = Yii::t('rbac', 'Update');
 ?>
 

@@ -14,6 +14,7 @@ use nullref\rbac\ar\Permission;
 use nullref\rbac\ar\Role;
 use nullref\rbac\components\DBManager;
 use nullref\rbac\components\RuleManager;
+use nullref\rbac\helpers\element\ElementHtml;
 use nullref\rbac\interfaces\UserProviderInterface;
 use nullref\rbac\repositories\ActionAccessItemRepository;
 use nullref\rbac\repositories\ActionAccessRepository;
@@ -25,6 +26,7 @@ use nullref\rbac\repositories\ElementAccessRepository;
 use nullref\rbac\repositories\PermissionRepository;
 use nullref\rbac\repositories\RoleRepository;
 use nullref\rbac\repositories\RuleRepository;
+use nullref\rbac\services\ElementCheckerService;
 use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
@@ -191,6 +193,8 @@ class Bootstrap implements BootstrapInterface
                 return new RuleRepository($container->get(AuthRule::class));
             }
         );
+
+        ElementHtml::$elementCheckerService = Yii::$container->get(ElementCheckerService::class);
     }
 
     /**

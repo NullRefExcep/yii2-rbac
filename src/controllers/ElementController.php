@@ -72,6 +72,58 @@ class ElementController extends BaseController
         ];
     }
 
+    public function actionElementConfig($identificator)
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $model = $this->elementAccessForm;
+        $ar = $this->elementAccessRepository->findByCondition(['identificator' => $identificator]);
+        if ($ar) {
+            $model->loadWithAR($ar);
+            $tree = $this->authTree->getArrayAuthTreeStructure(
+                $this->authTree->getAuthTree(),
+                $this->elementAccessService->getItems($ar)
+            );
+        } else {
+            $tree = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
+        }
+        $types = [];
+
+        return $this->renderAjax('element-config', [
+            'model'         => $model,
+            'tree'          => $tree,
+            'types'         => $types,
+            'elementAccess' => $ar,
+        ]);
+    }
+
+    public function actionSaveAjax()
+    {
+//        $ar = $this->elementAccessRepository->findByCondition(['identificator' => $identificator]);
+
+        $model = $this->elementAccessForm;
+        $model->loadWithAR($ar);
+
+        $tree = $this->authTree->getArrayAuthTreeStructure(
+            $this->authTree->getAuthTree(),
+            $this->elementAccessService->getItems($ar)
+        );
+        $types = [];
+
+        if ($model->load(Yii::$app->request->post()) && $updateId = $model->update($ar)) {
+            return $this->redirect(['view', 'id' => $updateId]);
+        } else {
+            return $this->render('update', [
+                'model'         => $model,
+                'tree'          => $tree,
+                'types'         => $types,
+                'elementAccess' => $ar,
+            ]);
+        }
+    }
+
     /**
      * Lists all ElementAccess models.
      * @return mixed
@@ -110,7 +162,7 @@ class ElementController extends BaseController
     public function actionCreate()
     {
         $model = $this->elementAccessForm;
-        $treeStructure = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
+        $tree = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
         $types = [];
 
         if ($model->load(Yii::$app->request->post()) && $saveId = $model->save()) {
@@ -118,7 +170,7 @@ class ElementController extends BaseController
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'tree'  => $treeStructure,
+                'tree'  => $tree,
                 'types' => $types,
             ]);
         }
@@ -142,7 +194,7 @@ class ElementController extends BaseController
 
         $tree = $this->authTree->getArrayAuthTreeStructure(
             $this->authTree->getAuthTree(),
-            $this->actionAccessService->getItems($ar)
+            $this->elementAccessService->getItems($ar)
         );
         $types = [];
 
@@ -150,10 +202,10 @@ class ElementController extends BaseController
             return $this->redirect(['view', 'id' => $updateId]);
         } else {
             return $this->render('update', [
-                'model'        => $model,
-                'tree'         => $tree,
-                'types' => $types,
-                'actionAccess' => $ar,
+                'model'         => $model,
+                'tree'          => $tree,
+                'types'         => $types,
+                'elementAccess' => $ar,
             ]);
         }
     }

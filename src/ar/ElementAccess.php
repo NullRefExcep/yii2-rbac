@@ -59,6 +59,6 @@ class ElementAccess extends ActiveRecord
     public function getAuthItems()
     {
         return $this->hasMany(AuthItem::class, ['name' => 'auth_item_name'])
-            ->viaTable(ElementAccessItem::tableName(), ['elemnt_access_id' => 'id']);
+            ->viaTable(ElementAccessItem::tableName(), ['element_access_id' => 'id']);
     }
 }

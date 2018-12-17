@@ -35,6 +35,16 @@ class ElementAccessRepository extends AbstractRepository
             ->one();
     }
 
+    public function findItems($identificator)
+    {
+        $element = $this->findOneByCondition(['identificator' => $identificator]);
+        if ($element) {
+            $this->elementAccessItemRepository->findActionItems($element->id);
+        }
+
+        return [];
+    }
+
     public function assignItems($elementId, $items)
     {
         if (!is_array($items)) {
