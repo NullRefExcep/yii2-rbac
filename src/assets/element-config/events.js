@@ -5,14 +5,12 @@ jQuery(function () {
 
     let elements = body.find('[data-identificator]');
     elements.click(function (e) {
-        e.preventDefault();
-        let current = jQuery(this);
-        loadModal(current);
-        return false;
-    });
-    elements.dblclick(function () {
-        let current = jQuery(this);
-        current.click();
+        if (e.ctrlKey) {
+            e.preventDefault();
+            let current = jQuery(this);
+            loadModal(current);
+            return false;
+        }
     });
 
     let loadModal = function (caller) {
