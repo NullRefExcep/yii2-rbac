@@ -21,6 +21,8 @@ use yii\helpers\ArrayHelper;
  */
 class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
 {
+    public $elementEditorRole = 'elementEditor';
+
     public $loginUrl = '/user/login';
 
     /** @var UserProviderInterface|null */

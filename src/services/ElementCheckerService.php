@@ -8,6 +8,9 @@ use yii\base\InvalidConfigException;
 
 class ElementCheckerService
 {
+    /** @var object  */
+    private $userComponent;
+
     /** @var AssignmentService */
     private $assignmentService;
 
