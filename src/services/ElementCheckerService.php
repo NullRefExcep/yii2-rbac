@@ -50,6 +50,6 @@ class ElementCheckerService
 
         $intersect = array_intersect($userItems, $elementItems);
 
-        return count($intersect);
+        return (count($intersect) != 0) ? true : false;
     }
 }

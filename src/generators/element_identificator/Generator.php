@@ -3,8 +3,7 @@
 namespace nullref\rbac\generators\element_identificator;
 
 use nullref\core\traits\VariableExportTrait;
-use nullref\rbac\services\ViewReaderService;
-use nullref\rbac\services\ViewWriterService;
+use nullref\rbac\services\ViewModifierService;
 use yii\gii\CodeFile;
 use yii\gii\Generator as BaseGenerator;
 
@@ -30,19 +29,14 @@ class Generator extends BaseGenerator
 
     public $aliases;
 
-    /** @var ViewReaderService */
-    private $viewReaderService;
-
-    /** @var ViewWriterService */
-    private $viewWriterService;
+    /** @var ViewModifierService */
+    private $viewModifierService;
 
     public function __construct(
-        ViewReaderService $viewReaderService,
-        ViewWriterService $viewWriterService
+        ViewModifierService $viewModifierService
     )
     {
-        $this->viewReaderService = $viewReaderService;
-        $this->viewWriterService = $viewWriterService;
+        $this->viewModifierService = $viewModifierService;
     }
 
     /**
@@ -75,7 +69,7 @@ class Generator extends BaseGenerator
         $files = [];
         $this->aliases = (!is_array($this->aliases)) ? [] : $this->aliases;
         foreach ($this->aliases as $alias) {
-            $writtenFiles = $this->viewWriterService->writeIdentificator($alias);
+            $writtenFiles = $this->viewModifierService->writeIdentificator($alias);
             foreach ($writtenFiles as $file) {
                 $filePath = $file['filePath'];
                 $code = $file['content'];
@@ -93,7 +87,7 @@ class Generator extends BaseGenerator
 
     public function getViewPaths()
     {
-        $aliases = $this->viewReaderService->prepareAliases();
+        $aliases = $this->viewModifierService->prepareAliases();
         $paths = [];
         foreach ($aliases as $alias) {
             $paths[$alias['alias']] = $alias['alias'];
