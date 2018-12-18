@@ -13,7 +13,6 @@ use yii\widgets\ActiveForm;
  * @var $model ElementAccessForm
  * @var $form ActiveForm
  * @var $tree array
- * @var $types array
  * @var $isNew bool
  */
 
@@ -36,9 +35,6 @@ JS
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
-            <?= $form->field($model, 'type')->dropDownList($types, [
-                'prompt' => Yii::t('rbac', 'Choose element type'),
-            ]) ?>
             <?= $form->field($model, 'identificator')->textInput() ?>
             <?= $form->field($model, 'description')->textarea() ?>
         </div>

@@ -14,6 +14,8 @@ use nullref\rbac\services\ElementAccessService;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -73,6 +75,12 @@ class ElementController extends BaseController
         ];
     }
 
+    /**
+     * @param $identificator
+     *
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionElementConfig($identificator)
     {
         if (!Yii::$app->request->isAjax) {
@@ -90,16 +98,29 @@ class ElementController extends BaseController
         } else {
             $tree = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
         }
-        $types = [];
+        $selectedFiltered = [];
+        foreach ($tree as $selection) {
+            if ($selection['selected']) {
+                $selectedFiltered[] = $selection['title'];
+            }
+        }
+        $selected = Json::encode($selectedFiltered);
+        $tree = ArrayHelper::map($tree, 'title', 'title');
 
         return $this->renderAjax('element-config', [
             'model'         => $model,
             'tree'          => $tree,
-            'types'         => $types,
+            'selected'      => $selected,
             'elementAccess' => $ar,
         ]);
     }
 
+    /**
+     * @param $identificator
+     *
+     * @return array|bool
+     * @throws NotFoundHttpException
+     */
     public function actionSaveAjax($identificator)
     {
         if (!Yii::$app->request->isAjax) {
@@ -174,7 +195,6 @@ class ElementController extends BaseController
     {
         $model = $this->elementAccessForm;
         $tree = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
-        $types = [];
 
         if ($model->load(Yii::$app->request->post()) && $saveId = $model->save()) {
             return $this->redirect(['view', 'id' => $saveId]);
@@ -182,7 +202,6 @@ class ElementController extends BaseController
             return $this->render('create', [
                 'model' => $model,
                 'tree'  => $tree,
-                'types' => $types,
             ]);
         }
     }
@@ -207,7 +226,6 @@ class ElementController extends BaseController
             $this->authTree->getAuthTree(),
             $this->elementAccessService->getItems($ar)
         );
-        $types = [];
 
         if ($model->load(Yii::$app->request->post()) && $updateId = $model->update($ar)) {
             return $this->redirect(['view', 'id' => $updateId]);
@@ -215,7 +233,6 @@ class ElementController extends BaseController
             return $this->render('update', [
                 'model'         => $model,
                 'tree'          => $tree,
-                'types'         => $types,
                 'elementAccess' => $ar,
             ]);
         }

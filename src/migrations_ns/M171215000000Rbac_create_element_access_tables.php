@@ -13,7 +13,6 @@ class M171215000000Rbac_create_element_access_tables extends Migration
     {
         $this->createTable('{{%element_access}}', [
             'id'          => $this->primaryKey(),
-            'type'        => $this->integer(),
             'identificator'  => $this->string(),
             'description' => $this->text(),
         ], $this->getTableOptions());

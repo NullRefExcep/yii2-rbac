@@ -79,7 +79,6 @@ class ElementAccessRepository extends AbstractRepository
     public function saveWithItems(ElementAccessForm $form)
     {
         $elementAccess = new ElementAccess([
-            'type'          => $form->type,
             'identificator' => $form->identificator,
             'description'   => $form->description,
         ]);
@@ -94,7 +93,6 @@ class ElementAccessRepository extends AbstractRepository
 
     public function updateWithItems(ElementAccessForm $form, ElementAccess $elementAccess)
     {
-        $elementAccess->type = $form->type;
         $elementAccess->identificator = $form->identificator;
         $elementAccess->description = $form->description;
         if ($this->save($elementAccess)) {

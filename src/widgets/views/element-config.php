@@ -1,10 +1,10 @@
 <?php
 
-use nullref\rbac\assets\FancyTreeAsset;
+use nullref\rbac\assets\ElementConfigAsset;
 
-FancyTreeAsset::register($this);
+ElementConfigAsset::register($this);
 
-$this->registerJS(<<<JS
+$this->registerJs(<<<JS
 let body = jQuery('body');
 body.on('submit', '#elementConfigForm', function (e) {
     e.preventDefault();

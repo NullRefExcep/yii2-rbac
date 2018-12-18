@@ -3,11 +3,19 @@
 use kartik\select2\Select2;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /**
+ * @var $this View
  * @var $tree array
+ * @var $selected array
  */
+
+$this->registerJs(<<<JS
+    app.selection = $selected;
+JS
+);
 
 ?>
 
@@ -16,10 +24,6 @@ use yii\widgets\ActiveForm;
         'id'           => 'elementConfig',
         'size'         => Modal::SIZE_LARGE,
         'header'       => '<h3>' . $this->title . '</h3>',
-        'toggleButton' => [
-            'label' => Yii::t('rbac', 'Open element configuration'),
-            'class' => 'btn btn-primary modal-control',
-        ],
     ]); ?>
 
     <?php $form = ActiveForm::begin([
@@ -30,7 +34,6 @@ use yii\widgets\ActiveForm;
 
     <div class="row">
         <div class="hidden">
-            <?= $form->field($model, 'type')->hiddenInput(['id' => 'elementType']) ?>
             <?= $form->field($model, 'identificator')->hiddenInput(['id' => 'elementIdentificator']) ?>
         </div>
         <div class="col-lg-12">
@@ -40,9 +43,9 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'items')->widget(Select2::class, [
                 'data'    => $tree,
                 'options' => [
-                    'id'       => 'elementItems',
+                    'id'          => 'elementItems',
                     'placeholder' => Yii::t('rbac', 'Select items'),
-                    'multiple' => true,
+                    'multiple'    => true,
                 ],
             ]) ?>
         </div>

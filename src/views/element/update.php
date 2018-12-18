@@ -9,7 +9,6 @@ use yii\web\View;
  * @var $this View
  * @var $model ElementAccessForm
  * @var $tree array
- * @var $types array
  * @var $elementAccess ElementAccess
  */
 
@@ -46,7 +45,6 @@ $this->params['breadcrumbs'][] = Yii::t('rbac', 'Update');
     <?= $this->render('_form', [
         'model' => $model,
         'tree'  => $tree,
-        'types' => $types,
         'isNew' => false,
     ]) ?>
 

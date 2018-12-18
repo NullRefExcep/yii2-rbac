@@ -10,9 +10,6 @@ use yii\db\ActiveRecord;
 
 class ElementAccessForm extends Model
 {
-    /** @var int */
-    public $type;
-
     /** @var string */
     public $identificator;
 
@@ -45,7 +42,6 @@ class ElementAccessForm extends Model
     public function rules()
     {
         return [
-            [['type'], 'integer'],
             [['identificator'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['items'], 'safe'],
@@ -58,7 +54,6 @@ class ElementAccessForm extends Model
     public function attributeLabels()
     {
         return [
-            'type'          => Yii::t('rbac', 'Type'),
             'identificator' => Yii::t('rbac', 'Identificator'),
             'description'   => Yii::t('rbac', 'Description'),
             'items'         => Yii::t('rbac', 'Items'),
@@ -80,7 +75,6 @@ class ElementAccessForm extends Model
 
     public function loadWithAR(ElementAccess $elementAccess)
     {
-        $this->type = $elementAccess->type;
         $this->identificator = $elementAccess->identificator;
         $this->description = $elementAccess->description;
     }

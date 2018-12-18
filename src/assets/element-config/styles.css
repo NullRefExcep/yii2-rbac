@@ -1,13 +1,5 @@
-.element-config-modal-outer.shown {
-    position: absolute;
-    z-index: 1000000;
-    top: 0;
-    left: 0;
-    background: white;
-    border: 1px solid black;
-    border-radius: 5px;
-    height: 55px;
-    padding: 10px;
+.element-config-modal-outer + .select2-container {
+    z-index: 1050 !important;
 }
 
 [data-identificator] {

@@ -10,7 +10,6 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%element_access}}".
  *
  * @property int $id
- * @property int $type
  * @property string $identificator
  * @property string $description
  *
@@ -34,7 +33,6 @@ class ElementAccess extends ActiveRecord
     public function rules()
     {
         return [
-            [['type'], 'integer'],
             [['description'], 'string'],
             [['identificator'], 'string', 'max' => 255],
         ];
@@ -47,7 +45,6 @@ class ElementAccess extends ActiveRecord
     {
         return [
             'id'            => Yii::t('rbac', 'ID'),
-            'type'          => Yii::t('rbac', 'Type'),
             'identificator' => Yii::t('rbac', 'Identificator'),
             'description'   => Yii::t('rbac', 'Description'),
         ];

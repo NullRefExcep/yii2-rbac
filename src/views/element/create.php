@@ -9,7 +9,6 @@ use yii\web\View;
  * @var $model ElementAccessForm
  * @var $modules array
  * @var $tree array
- * @var $types array
  */
 
 $this->title = Yii::t('rbac', 'Create Element Access');
@@ -33,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form', [
         'model' => $model,
         'tree'  => $tree,
-        'types' => $types,
         'isNew' => true,
     ]) ?>
 
