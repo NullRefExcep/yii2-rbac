@@ -2,6 +2,7 @@
 
 namespace nullref\rbac;
 
+use Exception;
 use nullref\rbac\ar\ActionAccess;
 use nullref\rbac\ar\ActionAccessItem;
 use nullref\rbac\ar\AuthAssignment;
@@ -61,6 +62,7 @@ class Bootstrap implements BootstrapInterface
         if ($module->userComponent === null) {
             throw new InvalidConfigException(Module::class . '::userComponent has to be set');
         }
+        $this->setUserIdentity($module);
 
         if ($module->ruleManager === null) {
             $module->ruleManager = RuleManager::class;
@@ -195,6 +197,22 @@ class Bootstrap implements BootstrapInterface
         );
 
         ElementHtml::$elementCheckerService = Yii::$container->get(ElementCheckerService::class);
+    }
+
+    protected function setUserIdentity(Module $module)
+    {
+        $moduleUserComponent = $module->userComponent;
+        try {
+            $module->userComponent = Yii::$app->{$moduleUserComponent};
+        } catch (Exception $e) {
+            try {
+                $module->userComponent = Yii::$app->getModule($moduleUserComponent);
+            } catch (Exception $e) {
+                throw new InvalidConfigException('Bad userComponent provided');
+            }
+        }
+
+        $module->setUserIdentity($module->userComponent->identity);
     }
 
     /**

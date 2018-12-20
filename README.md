@@ -1,4 +1,4 @@
-Yii2 RBAC
+Yii2 RBAC (in development now)
 ===============
 
 Advanced RBAC superstructure on yii2 RBAC, Dektrium extension

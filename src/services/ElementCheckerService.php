@@ -2,13 +2,14 @@
 
 namespace nullref\rbac\services;
 
+use nullref\rbac\Module;
 use nullref\rbac\repositories\ElementAccessRepository;
 use Yii;
-use yii\base\InvalidConfigException;
+use yii\web\User;
 
 class ElementCheckerService
 {
-    /** @var object  */
+    /** @var object */
     private $userComponent;
 
     /** @var AssignmentService */
@@ -20,6 +21,9 @@ class ElementCheckerService
     /** @var ElementAccessRepository */
     private $elementAccessRepository;
 
+    /** @var User|null */
+    private $userIdentity;
+
     public function __construct(
         AssignmentService $assignmentService,
         ElementAccessService $elementAccessService,
@@ -30,29 +34,27 @@ class ElementCheckerService
         $this->elementAccessService = $elementAccessService;
         $this->elementAccessRepository = $elementAccessRepository;
 
-        $moduleUserComponent = Yii::$app->getModule('rbac')->userComponent;
-        try {
-            $this->userComponent = Yii::$app->{$moduleUserComponent};
-        } catch (\Exception $e) {
-            try {
-                $this->userComponent = Yii::$app->getModule($moduleUserComponent);
-            } catch (\Exception $e) {
-                throw new InvalidConfigException('Bad userComponent provided');
-            }
-        }
+        /** @var Module $module */
+        $module = Yii::$app->getModule('rbac');
+        $this->userIdentity = $module->getUserIdentity();
     }
 
     public function isAllowed($identificator)
     {
-        $userId = $this->userComponent->identity->getId();
-        $userItems = $this->assignmentService->getUserAssignments($userId);
-        $elementItems = $this->elementAccessRepository->findItems($identificator);
-        if (empty($elementItems)) {
-            return true;
+        $identity = $this->userIdentity;
+        if ($identity) {
+            $userId = $identity->getId();
+            $userItems = $this->assignmentService->getUserAssignments($userId);
+            $elementItems = $this->elementAccessRepository->findItems($identificator);
+            if (empty($elementItems)) {
+                return true;
+            }
+
+            $intersect = array_intersect($userItems, $elementItems);
+
+            return (count($intersect) != 0) ? true : false;
         }
 
-        $intersect = array_intersect($userItems, $elementItems);
-
-        return (count($intersect) != 0) ? true : false;
+        return false;
     }
 }

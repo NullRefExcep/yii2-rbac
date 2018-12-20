@@ -2,7 +2,6 @@
 
 namespace nullref\rbac\widgets;
 
-use Exception;
 use nullref\rbac\Module;
 use nullref\rbac\services\AssignmentService;
 use Yii;
@@ -16,7 +15,7 @@ class ElementConfig extends Widget
     private $elementEditorRole;
 
     /** @var object */
-    private $userComponent;
+    private $userIdentity;
 
     /** @var AssignmentService */
     private $assignmentService;
@@ -31,17 +30,8 @@ class ElementConfig extends Widget
 
         /** @var Module $module */
         $module = Yii::$app->getModule('rbac');
+        $this->userIdentity = $module->getUserIdentity();
         $this->elementEditorRole = $module->elementEditorRole;
-        $moduleUserComponent = $module->userComponent;
-        try {
-            $this->userComponent = Yii::$app->{$moduleUserComponent};
-        } catch (Exception $e) {
-            try {
-                $this->userComponent = Yii::$app->getModule($moduleUserComponent);
-            } catch (Exception $e) {
-                throw new InvalidConfigException('Bad userComponent provided');
-            }
-        }
 
         $this->assignmentService = Yii::$container->get(AssignmentService::class);
     }
@@ -49,11 +39,14 @@ class ElementConfig extends Widget
     /** @inheritdoc */
     public function run()
     {
-        $userId = $this->userComponent->identity->getId();
-        $userItems = $this->assignmentService->getUserAssignments($userId);
+        $identity = $this->userIdentity;
+        if ($identity) {
+            $userId = $identity->getId();
+            $userItems = $this->assignmentService->getUserAssignments($userId);
 
-        if (in_array($this->elementEditorRole, $userItems)) {
-            return $this->render('element-config');
+            if (in_array($this->elementEditorRole, $userItems)) {
+                return $this->render('element-config');
+            }
         }
 
         return '';
