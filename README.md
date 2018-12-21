@@ -64,7 +64,7 @@ To use this functionality you have to:
 ```
 nullref\rbac\helpers\elementt\ElementHtml
 ```
-and provide data-identificator option with unique value to $options array
+and provide data-identifier option with unique value to $options array
 ```
     <?= ElementHtml::a('a', ['somewhere', ['data-identificator' => 'a-0.11723100 1545142675']) ?>
 ```

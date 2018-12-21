@@ -10,7 +10,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%element_access}}".
  *
  * @property int $id
- * @property string $identificator
+ * @property string $identifier
  * @property string $description
  *
  * @property AuthItem[] $authItems
@@ -34,7 +34,7 @@ class ElementAccess extends ActiveRecord
     {
         return [
             [['description'], 'string'],
-            [['identificator'], 'string', 'max' => 255],
+            [['identifier'], 'string', 'max' => 255],
         ];
     }
 
@@ -45,7 +45,7 @@ class ElementAccess extends ActiveRecord
     {
         return [
             'id'            => Yii::t('rbac', 'ID'),
-            'identificator' => Yii::t('rbac', 'Identificator'),
+            'identifier' => Yii::t('rbac', 'Identifier'),
             'description'   => Yii::t('rbac', 'Description'),
         ];
     }

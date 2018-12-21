@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = Yii::t('rbac', 'Update');
     <div class="row">
         <div class="col-lg-12">
             <h4>
-                <?= $model->identificator ?>
+                <?= $model->identifier ?>
             </h4>
         </div>
     </div>

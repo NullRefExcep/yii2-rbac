@@ -39,13 +39,13 @@ class ElementCheckerService
         $this->userIdentity = $module->getUserIdentity();
     }
 
-    public function isAllowed($identificator)
+    public function isAllowed($identifier)
     {
         $identity = $this->userIdentity;
         if ($identity) {
             $userId = $identity->getId();
             $userItems = $this->assignmentService->getUserAssignments($userId);
-            $elementItems = $this->elementAccessRepository->findItems($identificator);
+            $elementItems = $this->elementAccessRepository->findItems($identifier);
             if (empty($elementItems)) {
                 return true;
             }

@@ -1,6 +1,6 @@
 <?php
 
-use nullref\rbac\generators\element_identificator\Generator;
+use nullref\rbac\generators\element_identifier\Generator;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<div class="element-identificator-form">
+<div class="element-identifier-form">
     <?=
     $form->field($generator, 'aliases')
         ->checkboxList($generator->getViewPaths());

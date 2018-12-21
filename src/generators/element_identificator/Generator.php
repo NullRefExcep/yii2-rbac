@@ -1,6 +1,6 @@
 <?php
 
-namespace nullref\rbac\generators\element_identificator;
+namespace nullref\rbac\generators\element_identifier;
 
 use nullref\core\traits\VariableExportTrait;
 use nullref\rbac\services\ViewModifierService;
@@ -16,7 +16,7 @@ class Generator extends BaseGenerator
      */
     public function getName()
     {
-        return 'Element Identificator (RBAC)';
+        return 'Element Identifier (RBAC)';
     }
 
     /**
@@ -24,7 +24,7 @@ class Generator extends BaseGenerator
      */
     public function getDescription()
     {
-        return 'This generator generates identificators for ElementHtml elements in view provided by path';
+        return 'This generator generates identifiers for ElementHtml elements in view provided by path';
     }
 
     public $aliases;
@@ -55,7 +55,7 @@ class Generator extends BaseGenerator
     public function hints()
     {
         return array_merge(parent::hints(), [
-            'aliases' => 'Specify the aliases generate identificators for ElementHtml inside views.',
+            'aliases' => 'Specify the aliases generate identifiers for ElementHtml inside views.',
         ]);
     }
 
@@ -69,7 +69,7 @@ class Generator extends BaseGenerator
         $files = [];
         $this->aliases = (!is_array($this->aliases)) ? [] : $this->aliases;
         foreach ($this->aliases as $alias) {
-            $writtenFiles = $this->viewModifierService->writeIdentificator($alias);
+            $writtenFiles = $this->viewModifierService->writeIdentifier($alias);
             foreach ($writtenFiles as $file) {
                 $filePath = $file['filePath'];
                 $code = $file['content'];

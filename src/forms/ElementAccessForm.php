@@ -11,7 +11,7 @@ use yii\db\ActiveRecord;
 class ElementAccessForm extends Model
 {
     /** @var string */
-    public $identificator;
+    public $identifier;
 
     /** @var string */
     public $description;
@@ -42,7 +42,7 @@ class ElementAccessForm extends Model
     public function rules()
     {
         return [
-            [['identificator'], 'string', 'max' => 255],
+            [['identifier'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['items'], 'safe'],
         ];
@@ -54,7 +54,7 @@ class ElementAccessForm extends Model
     public function attributeLabels()
     {
         return [
-            'identificator' => Yii::t('rbac', 'Identificator'),
+            'identifier' => Yii::t('rbac', 'Identifier'),
             'description'   => Yii::t('rbac', 'Description'),
             'items'         => Yii::t('rbac', 'Items'),
         ];
@@ -75,7 +75,7 @@ class ElementAccessForm extends Model
 
     public function loadWithAR(ElementAccess $elementAccess)
     {
-        $this->identificator = $elementAccess->identificator;
+        $this->identifier = $elementAccess->identifier;
         $this->description = $elementAccess->description;
     }
 

@@ -93,8 +93,8 @@ class Bootstrap implements BootstrapInterface
                 function (Event $event) {
                     /** @var GiiModule $gii */
                     $gii = $event->sender;
-                    $gii->generators['element-identificator'] = [
-                        'class' => 'nullref\rbac\generators\element_identificator\Generator',
+                    $gii->generators['element-identifier'] = [
+                        'class' => 'nullref\rbac\generators\element_identifier\Generator',
                     ];
                 }
             );

@@ -34,7 +34,7 @@ JS
 
     <div class="row">
         <div class="hidden">
-            <?= $form->field($model, 'identificator')->hiddenInput(['id' => 'elementIdentificator']) ?>
+            <?= $form->field($model, 'identifier')->hiddenInput(['id' => 'elementIdentifier']) ?>
         </div>
         <div class="col-lg-12">
             <?= $form->field($model, 'description')->textarea(['id' => 'element-description']) ?>

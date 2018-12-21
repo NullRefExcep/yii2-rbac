@@ -63,7 +63,7 @@ class ViewModifierService
      *
      * @return array
      */
-    public function writeIdentificator($alias)
+    public function writeIdentifier($alias)
     {
         $dirPath = Yii::getAlias($alias);
         $realPath = realpath($dirPath);
@@ -196,7 +196,7 @@ class ViewModifierService
                                 if (isset($endOfOption[2])) {
                                     $this->position = $endOfOption[2][count($endOfOption[2]) - 1][1];
                                     $this->countParams($fullTag);
-                                    $this->addIdentificator($tagName);
+                                    $this->addIdentifier($tagName);
                                 }
                             }
                         }
@@ -247,9 +247,9 @@ class ViewModifierService
      * @param $tagName
      * @param bool $isAppend
      */
-    private function addIdentificator($tagName, $isAppend = false)
+    private function addIdentifier($tagName, $isAppend = false)
     {
-        $identificator = $this->generateIdentificator($tagName);
+        $identifier = $this->generateIdentifier($tagName);
 
         $paramsAmount = 0;
         switch ($tagName) {
@@ -267,21 +267,21 @@ class ViewModifierService
         $currentFilePosition = $this->currentPosition+$this->position;
         if ($this->currentAmountOfParams == $paramsAmount) {
             if ($this->currentFile[$currentFilePosition-1] !== '[') {
-                $identificator = ', ' . $identificator;
+                $identifier = ', ' . $identifier;
             }
         } else {
             if ($paramsAmount == 3 && $this->currentAmountOfParams == 2) {
-                $identificator = ', [' . $identificator . ']';
+                $identifier = ', [' . $identifier . ']';
             } elseif ($paramsAmount == 3 && $this->currentAmountOfParams == 1) {
-                $identificator = ', null, [' . $identificator . ']';
+                $identifier = ', null, [' . $identifier . ']';
             }
         }
 
-        $identificatorLength = strlen($identificator);
-        $this->offset += $identificatorLength;
+        $identifierLength = strlen($identifier);
+        $this->offset += $identifierLength;
         $this->currentFile =
             substr($this->currentFile, 0, $currentFilePosition) .
-            $identificator .
+            $identifier .
             substr($this->currentFile, $currentFilePosition);
     }
 
@@ -290,10 +290,10 @@ class ViewModifierService
      *
      * @return string
      */
-    private function generateIdentificator($tagName)
+    private function generateIdentifier($tagName)
     {
         $microtime = str_replace(',', '', microtime());
 
-        return "'data-identificator' => '" . $tagName . '-' . $microtime . "'";
+        return "'data-identifier' => '" . $tagName . '-' . $microtime . "'";
     }
 }

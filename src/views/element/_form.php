@@ -35,7 +35,7 @@ JS
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
-            <?= $form->field($model, 'identificator')->textInput() ?>
+            <?= $form->field($model, 'identifier')->textInput() ?>
             <?= $form->field($model, 'description')->textarea() ?>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">

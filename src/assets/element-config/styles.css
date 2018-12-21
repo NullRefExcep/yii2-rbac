@@ -2,7 +2,7 @@
     z-index: 1050 !important;
 }
 
-[data-identificator] {
+[data-identifier] {
     animation: blinker 1s linear infinite;
 }
 

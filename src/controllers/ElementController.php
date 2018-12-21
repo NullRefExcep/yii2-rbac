@@ -76,19 +76,19 @@ class ElementController extends BaseController
     }
 
     /**
-     * @param $identificator
+     * @param $identifier
      *
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionElementConfig($identificator)
+    public function actionElementConfig($identifier)
     {
         if (!Yii::$app->request->isAjax) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
         $model = $this->elementAccessForm;
-        $ar = $this->elementAccessRepository->findOneByCondition(['identificator' => $identificator]);
+        $ar = $this->elementAccessRepository->findOneByCondition(['identifier' => $identifier]);
         if ($ar) {
             $model->loadWithAR($ar);
             $tree = $this->authTree->getArrayAuthTreeStructure(
@@ -116,19 +116,19 @@ class ElementController extends BaseController
     }
 
     /**
-     * @param $identificator
+     * @param $identifier
      *
      * @return array|bool
      * @throws NotFoundHttpException
      */
-    public function actionSaveAjax($identificator)
+    public function actionSaveAjax($identifier)
     {
         if (!Yii::$app->request->isAjax) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
         $model = $this->elementAccessForm;
-        $ar = $this->elementAccessRepository->findOneByCondition(['identificator' => $identificator]);
+        $ar = $this->elementAccessRepository->findOneByCondition(['identifier' => $identifier]);
 
         $result = false;
         if ($ar) {

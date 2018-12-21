@@ -3,7 +3,7 @@ jQuery(function () {
     let modalPlacement = body.find('.element-config-modal-outer');
     let modalControl = body.find('.modal-control');
 
-    let elements = body.find('[data-identificator]');
+    let elements = body.find('[data-identifier]');
     elements.click(function (e) {
         if (e.ctrlKey) {
             e.preventDefault();
@@ -14,19 +14,19 @@ jQuery(function () {
     });
 
     let loadModal = function (caller) {
-        let identificator = caller.data('identificator');
+        let identifier = caller.data('identifier');
         jQuery.ajax({
             method: 'GET',
             url: '/rbac/element/element-config',
             data: {
-                'identificator': identificator
+                'identifier': identifier
             }
         }).success(function(response) {
             modalPlacement.html(response);
-            body.find('.modal-header h3').text(identificator);
+            body.find('.modal-header h3').text(identifier);
             let form = body.find('#elementConfigForm');
-            form.prop('action', form.prop('action') + '?identificator=' + identificator);
-            body.find('#elementIdentificator').val(identificator);
+            form.prop('action', form.prop('action') + '?identifier=' + identifier);
+            body.find('#elementIdentifier').val(identifier);
             modalPlacement.find('.modal').modal().show();
 
             //Select items

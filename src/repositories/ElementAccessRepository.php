@@ -35,9 +35,9 @@ class ElementAccessRepository extends AbstractRepository
             ->one();
     }
 
-    public function findItems($identificator)
+    public function findItems($identifier)
     {
-        $element = $this->findOneByCondition(['identificator' => $identificator]);
+        $element = $this->findOneByCondition(['identifier' => $identifier]);
         if ($element) {
             return $this->elementAccessItemRepository->findActionItems($element->id);
         }
@@ -79,7 +79,7 @@ class ElementAccessRepository extends AbstractRepository
     public function saveWithItems(ElementAccessForm $form)
     {
         $elementAccess = new ElementAccess([
-            'identificator' => $form->identificator,
+            'identifier' => $form->identifier,
             'description'   => $form->description,
         ]);
         if ($this->save($elementAccess)) {
@@ -93,7 +93,7 @@ class ElementAccessRepository extends AbstractRepository
 
     public function updateWithItems(ElementAccessForm $form, ElementAccess $elementAccess)
     {
-        $elementAccess->identificator = $form->identificator;
+        $elementAccess->identifier = $form->identifier;
         $elementAccess->description = $form->description;
         if ($this->save($elementAccess)) {
             $this->assignItems($elementAccess->id, $form->items);
