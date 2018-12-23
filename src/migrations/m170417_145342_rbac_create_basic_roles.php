@@ -4,7 +4,6 @@ use nullref\rbac\ar\AuthItem;
 use nullref\rbac\ar\AuthItemChild;
 use nullref\rbac\ar\AuthRule;
 use nullref\rbac\components\DbManager;
-use Yii;
 use yii\db\Migration;
 use yii\rbac\Item;
 
