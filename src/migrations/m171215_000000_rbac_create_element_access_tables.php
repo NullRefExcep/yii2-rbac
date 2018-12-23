@@ -3,7 +3,7 @@
 use nullref\core\traits\MigrationTrait;
 use yii\db\Migration;
 
-class m_171215_000000_rbac_create_element_access_tables extends Migration
+class m171215_000000_rbac_create_element_access_tables extends Migration
 {
     use MigrationTrait;
 

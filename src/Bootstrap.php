@@ -62,7 +62,9 @@ class Bootstrap implements BootstrapInterface
         if ($module->userComponent === null) {
             throw new InvalidConfigException(Module::class . '::userComponent has to be set');
         }
-        $this->setUserIdentity($module);
+        if ($app instanceof WebApplication) {
+            $this->setUserIdentity($module);
+        }
 
         if ($module->ruleManager === null) {
             $module->ruleManager = RuleManager::class;
