@@ -5,7 +5,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.5.0",
-        "kartik-v/yii2-widget-depdrop": "@dev",
+        "kartik-v/yii2-widget-depdrop": "*",
         "kartik-v/yii2-widget-select2": "^2.0",
         "nullref/yii2-useful": "dev-master",
         "nullref/yii2-core": "dev-master",
