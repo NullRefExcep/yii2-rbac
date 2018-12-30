@@ -5,8 +5,8 @@ use nullref\rbac\assets\ElementConfigAsset;
 ElementConfigAsset::register($this);
 
 $this->registerJs(<<<JS
-let body = jQuery('body');
-body.on('submit', '#elementConfigForm', function (e) {
+let bodyForRBAC = jQuery('body');
+bodyForRBAC.on('submit', '#elementConfigForm', function (e) {
     e.preventDefault();
     let form = jQuery(this);
     let action = form.prop('action');
@@ -18,7 +18,7 @@ body.on('submit', '#elementConfigForm', function (e) {
     }).success(function (response) {
         let wrapper = body.find('.element-config-modal-outer');
         wrapper.find('.modal').modal().hide();
-        body.find('.modal-backdrop').remove();
+        bodyForRBAC.find('.modal-backdrop').remove();
         wrapper.removeClass('shown');
         wrapper.html('');
     }).error(function (response) {
