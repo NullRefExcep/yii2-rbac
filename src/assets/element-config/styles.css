@@ -1,0 +1,13 @@
+.element-config-modal-outer + .select2-container {
+    z-index: 1050 !important;
+}
+
+[data-identifier] {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0.25;
+    }
+}

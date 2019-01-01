@@ -4,16 +4,17 @@ namespace nullref\rbac\filters;
 
 use nullref\rbac\ar\ActionAccess;
 use nullref\rbac\ar\AuthItem;
+use nullref\rbac\Module;
 use nullref\rbac\repositories\ActionAccessRepository;
 use Yii;
 use yii\base\InlineAction;
-use yii\base\InvalidConfigException;
 use yii\filters\AccessControl as BaseAccessControl;
 use yii\filters\AccessRule;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\ErrorAction;
 use yii\web\Response;
+use yii\web\User;
 
 class AccessControl extends BaseAccessControl
 {
@@ -23,21 +24,18 @@ class AccessControl extends BaseAccessControl
     /** @var ActionAccessRepository */
     protected $actionAccessRepository;
 
-    /** @var string */
+    /** @var object */
     protected $userComponent;
+
+    /** @var User|null */
+    protected $userIdentity;
 
     public function init()
     {
-        $moduleUserComponent = Yii::$app->getModule('rbac')->userComponent;
-        try {
-            $this->userComponent = Yii::$app->{$moduleUserComponent};
-        } catch (\Exception $e) {
-            try {
-                $this->userComponent = Yii::$app->getModule($moduleUserComponent);
-            } catch (\Exception $e) {
-                throw new InvalidConfigException('Bad userComponent provided');
-            }
-        }
+        /** @var Module $module */
+        $module = Yii::$app->getModule('rbac');
+        $this->userComponent = $module->userComponent;
+        $this->userIdentity = $module->getUserIdentity();
 
         $this->actionAccessRepository = Yii::$container->get(ActionAccessRepository::class);
 
@@ -56,7 +54,7 @@ class AccessControl extends BaseAccessControl
          */
         $this->denyCallback = function ($rule, $action) {
             $controller = $action->controller;
-            if ($this->userComponent->isGuest) {
+            if ($this->userIdentity->isGuest) {
                 return $controller->redirect('/user/login');
             }
             Yii::$app->session->setFlash('warning', Yii::t('rbac', 'You don\'t have permission to')
@@ -71,7 +69,11 @@ class AccessControl extends BaseAccessControl
     public function getRules($module, $controller, $action)
     {
         $rules = $this->rules;
-        $isUserGuest = $this->userComponent->isGuest;
+        $identity = $this->userIdentity;
+        $isUserGuest = true;
+        if ($identity) {
+            $isUserGuest = $this->userComponent->isGuest;
+        }
 
         if ($isUserGuest) {
             $rules[] = [

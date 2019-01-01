@@ -2,33 +2,42 @@
 
 namespace nullref\rbac;
 
+use Exception;
 use nullref\rbac\ar\ActionAccess;
 use nullref\rbac\ar\ActionAccessItem;
 use nullref\rbac\ar\AuthAssignment;
 use nullref\rbac\ar\AuthItem;
 use nullref\rbac\ar\AuthItemChild;
 use nullref\rbac\ar\AuthRule;
+use nullref\rbac\ar\ElementAccess;
+use nullref\rbac\ar\ElementAccessItem;
 use nullref\rbac\ar\FieldAccess;
 use nullref\rbac\ar\FieldAccessItem;
 use nullref\rbac\ar\Permission;
 use nullref\rbac\ar\Role;
 use nullref\rbac\components\DBManager;
 use nullref\rbac\components\RuleManager;
+use nullref\rbac\helpers\element\ElementHtml;
 use nullref\rbac\interfaces\UserProviderInterface;
 use nullref\rbac\repositories\ActionAccessItemRepository;
 use nullref\rbac\repositories\ActionAccessRepository;
 use nullref\rbac\repositories\AuthAssignmentRepository;
 use nullref\rbac\repositories\AuthItemChildRepository;
 use nullref\rbac\repositories\AuthItemRepository;
+use nullref\rbac\repositories\ElementAccessItemRepository;
+use nullref\rbac\repositories\ElementAccessRepository;
 use nullref\rbac\repositories\FieldAccessItemRepository;
 use nullref\rbac\repositories\FieldAccessRepository;
 use nullref\rbac\repositories\PermissionRepository;
 use nullref\rbac\repositories\RoleRepository;
 use nullref\rbac\repositories\RuleRepository;
+use nullref\rbac\services\ElementCheckerService;
 use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
+use yii\base\Event;
 use yii\base\InvalidConfigException;
+use yii\gii\Module as GiiModule;
 use yii\i18n\PhpMessageSource;
 use yii\web\Application as WebApplication;
 
@@ -57,6 +66,9 @@ class Bootstrap implements BootstrapInterface
         if ($module->userComponent === null) {
             throw new InvalidConfigException(Module::class . '::userComponent has to be set');
         }
+        if ($app instanceof WebApplication) {
+            $this->setUserIdentity($module);
+        }
 
         if ($module->ruleManager === null) {
             $module->ruleManager = RuleManager::class;
@@ -78,6 +90,20 @@ class Bootstrap implements BootstrapInterface
                     'basePath' => '@nullref/rbac/messages',
                 ];
             }
+        }
+
+        if ($app->hasModule('gii')) {
+            Event::on(
+                GiiModule::class,
+                GiiModule::EVENT_BEFORE_ACTION,
+                function (Event $event) {
+                    /** @var GiiModule $gii */
+                    $gii = $event->sender;
+                    $gii->generators['element-identifier'] = [
+                        'class' => 'nullref\rbac\generators\element_identifier\Generator',
+                    ];
+                }
+            );
         }
 
         if ($this->checkModuleInstalled($app)) {
@@ -135,11 +161,19 @@ class Bootstrap implements BootstrapInterface
             }
         );
         Yii::$container->set(
-            RoleRepository::class,
+            ElementAccessItemRepository::class,
             function ($container, $params, $config) {
-                return new RoleRepository(
-                    $container->get(Role::class),
-                    $container->get(AuthItemChildRepository::class)
+                return new ElementAccessItemRepository(
+                    $container->get(ElementAccessItem::class)
+                );
+            }
+        );
+        Yii::$container->set(
+            ElementAccessRepository::class,
+            function ($container, $params, $config) {
+                return new ElementAccessRepository(
+                    $container->get(ElementAccessItemRepository::class),
+                    $container->get(ElementAccess::class)
                 );
             }
         );
@@ -170,11 +204,38 @@ class Bootstrap implements BootstrapInterface
             }
         );
         Yii::$container->set(
+            RoleRepository::class,
+            function ($container, $params, $config) {
+                return new RoleRepository(
+                    $container->get(Role::class),
+                    $container->get(AuthItemChildRepository::class)
+                );
+            }
+        );
+        Yii::$container->set(
             RuleRepository::class,
             function ($container, $params, $config) {
                 return new RuleRepository($container->get(AuthRule::class));
             }
         );
+
+        ElementHtml::$elementCheckerService = Yii::$container->get(ElementCheckerService::class);
+    }
+
+    protected function setUserIdentity(Module $module)
+    {
+        $moduleUserComponent = $module->userComponent;
+        try {
+            $module->userComponent = Yii::$app->{$moduleUserComponent};
+        } catch (Exception $e) {
+            try {
+                $module->userComponent = Yii::$app->getModule($moduleUserComponent);
+            } catch (Exception $e) {
+                throw new InvalidConfigException('Bad userComponent provided');
+            }
+        }
+
+        $module->setUserIdentity($module->userComponent->identity);
     }
 
     /**
@@ -198,7 +259,8 @@ class Bootstrap implements BootstrapInterface
      *
      * @return bool
      */
-    protected function checkUserProvider(Module $module) {
+    protected function checkUserProvider(Module $module)
+    {
         return $module->userProvider instanceof UserProviderInterface;
     }
 }

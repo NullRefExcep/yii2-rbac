@@ -77,3 +77,7 @@ span.fancytree-active.fancytree-selected .fancytree-title,
 .fancytree-container span.fancytree-node {
     padding-left: 2px;
 }
+
+.modal .fancytree-title {
+    padding-left: 60px !important;
+}

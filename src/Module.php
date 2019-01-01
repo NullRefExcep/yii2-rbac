@@ -4,15 +4,12 @@ namespace nullref\rbac;
 
 use nullref\core\interfaces\IAdminModule;
 use nullref\core\interfaces\IHasMigrateNamespace;
-use nullref\rbac\ar\User;
 use nullref\rbac\components\RuleManager;
 use nullref\rbac\interfaces\UserProviderInterface;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
-use yii\base\Application;
-use yii\base\BootstrapInterface;
 use yii\base\Module as BaseModule;
-use yii\helpers\ArrayHelper;
+use yii\web\User as UserComponent;
 
 /**
  * Class Module
@@ -21,6 +18,10 @@ use yii\helpers\ArrayHelper;
  */
 class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
 {
+    /** @var string */
+    public $elementEditorRole = 'elementEditor';
+
+    /** @var string */
     public $loginUrl = '/user/login';
 
     /** @var UserProviderInterface|null */
@@ -38,10 +39,32 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
     ];
 
     /** @var array */
+    public $viewPathAliases = [];
+
+    /** @var array */
     public $classMap = [];
 
     /** @var array */
     public $defaultClassMap = [];
+
+    /** @var UserComponent|null */
+    private $userIdentity;
+
+    /**
+     * @return UserComponent|null
+     */
+    public function getUserIdentity()
+    {
+        return $this->userIdentity;
+    }
+
+    /**
+     * @param $identity
+     */
+    public function setUserIdentity($identity)
+    {
+        $this->userIdentity = $identity;
+    }
 
     /**
      * Item for admin menu
@@ -58,6 +81,11 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
                     'label' => Yii::t('rbac', 'Actions access'),
                     'icon'  => FA::_MAP_SIGNS,
                     'url'   => '/rbac/access/',
+                ],
+                [
+                    'label' => Yii::t('rbac', 'Elements access'),
+                    'icon'  => FA::_EXTERNAL_LINK,
+                    'url'   => '/rbac/element/',
                 ],
                 [
                     'label' => Yii::t('rbac', 'Assignments'),
