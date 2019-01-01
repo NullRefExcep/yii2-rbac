@@ -24,10 +24,16 @@ use nullref\rbac\repositories\ActionAccessRepository;
 use nullref\rbac\repositories\AuthAssignmentRepository;
 use nullref\rbac\repositories\AuthItemChildRepository;
 use nullref\rbac\repositories\AuthItemRepository;
+use nullref\rbac\repositories\cached\ActionAccessCachedRepository;
+use nullref\rbac\repositories\cached\AuthAssigmentCachedRepository;
+use nullref\rbac\repositories\cached\ElementAccessCachedRepository;
 use nullref\rbac\repositories\ElementAccessItemRepository;
 use nullref\rbac\repositories\ElementAccessRepository;
 use nullref\rbac\repositories\FieldAccessItemRepository;
 use nullref\rbac\repositories\FieldAccessRepository;
+use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
+use nullref\rbac\repositories\interfaces\AuthAssignmentRepositoryInterface;
+use nullref\rbac\repositories\interfaces\ElementAccessRepositoryInterface;
 use nullref\rbac\repositories\PermissionRepository;
 use nullref\rbac\repositories\RoleRepository;
 use nullref\rbac\repositories\RuleRepository;
@@ -37,8 +43,10 @@ use yii\base\Application;
 use yii\base\BootstrapInterface;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
+use yii\caching\CacheInterface;
 use yii\gii\Module as GiiModule;
 use yii\i18n\PhpMessageSource;
+use yii\rbac\ManagerInterface;
 use yii\web\Application as WebApplication;
 
 class Bootstrap implements BootstrapInterface
@@ -121,39 +129,37 @@ class Bootstrap implements BootstrapInterface
         //Repositories
         Yii::$container->set(
             ActionAccessItemRepository::class,
-            function ($container, $params, $config) {
-                return new ActionAccessItemRepository(
-                    $container->get(ActionAccessItem::class)
-                );
+            function () {
+                return new ActionAccessItemRepository(ActionAccessItem::class);
             }
         );
         Yii::$container->set(
-            ActionAccessRepository::class,
-            function ($container, $params, $config) {
+            ActionAccessRepositoryInterface::class,
+            function ($container) {
                 return new ActionAccessRepository(
                     $container->get(ActionAccessItemRepository::class),
-                    $container->get(ActionAccess::class)
+                    ActionAccess::class
                 );
             }
         );
         Yii::$container->set(
-            AuthAssignmentRepository::class,
-            function ($container, $params, $config) {
+            AuthAssignmentRepositoryInterface::class,
+            function ($container) {
                 return new AuthAssignmentRepository(
                     $container->get(DBManager::class),
-                    $container->get(AuthAssignment::class)
+                    AuthAssignment::class
                 );
             }
         );
         Yii::$container->set(
             AuthItemChildRepository::class,
-            function ($container, $params, $config) {
+            function () {
                 return new AuthItemChildRepository(AuthItemChild::class);
             }
         );
         Yii::$container->set(
             AuthItemRepository::class,
-            function ($container, $params, $config) {
+            function ($container) {
                 return new AuthItemRepository(
                     AuthItem::class,
                     $container->get(DBManager::class)
@@ -162,24 +168,22 @@ class Bootstrap implements BootstrapInterface
         );
         Yii::$container->set(
             ElementAccessItemRepository::class,
-            function ($container, $params, $config) {
-                return new ElementAccessItemRepository(
-                    $container->get(ElementAccessItem::class)
-                );
+            function () {
+                return new ElementAccessItemRepository(ElementAccessItem::class);
             }
         );
         Yii::$container->set(
-            ElementAccessRepository::class,
-            function ($container, $params, $config) {
+            ElementAccessRepositoryInterface::class,
+            function ($container) {
                 return new ElementAccessRepository(
                     $container->get(ElementAccessItemRepository::class),
-                    $container->get(ElementAccess::class)
+                    ElementAccess::class
                 );
             }
         );
         Yii::$container->set(
             FieldAccessItemRepository::class,
-            function ($container, $params, $config) {
+            function ($container) {
                 return new FieldAccessItemRepository(
                     $container->get(FieldAccessItem::class)
                 );
@@ -187,7 +191,7 @@ class Bootstrap implements BootstrapInterface
         );
         Yii::$container->set(
             FieldAccessRepository::class,
-            function ($container, $params, $config) {
+            function ($container) {
                 return new FieldAccessRepository(
                     $container->get(FieldAccessItemRepository::class),
                     $container->get(FieldAccess::class)
@@ -196,9 +200,9 @@ class Bootstrap implements BootstrapInterface
         );
         Yii::$container->set(
             PermissionRepository::class,
-            function ($container, $params, $config) {
+            function ($container) {
                 return new PermissionRepository(
-                    $container->get(Permission::class),
+                    Permission::class,
                     $container->get(AuthItemChildRepository::class)
                 );
             }
@@ -214,10 +218,46 @@ class Bootstrap implements BootstrapInterface
         );
         Yii::$container->set(
             RuleRepository::class,
-            function ($container, $params, $config) {
-                return new RuleRepository($container->get(AuthRule::class));
+            function () {
+                return new RuleRepository(AuthRule::class);
             }
         );
+        //Override with cached repositories
+        if (Yii::$app->cache instanceof CacheInterface) {
+            Yii::$container->set(
+                ActionAccessRepositoryInterface::class,
+                function ($container) {
+                    return new ActionAccessCachedRepository(
+                        new ActionAccessRepository(
+                            $container->get(ActionAccessItemRepository::class),
+                            ActionAccess::class
+                        )
+                    );
+                }
+            );
+            Yii::$container->set(
+                AuthAssignmentRepositoryInterface::class,
+                function ($container) {
+                    return new AuthAssigmentCachedRepository(
+                        new AuthAssignmentRepository(
+                            $container->get(DBManager::class),
+                            AuthAssignment::class
+                        )
+                    );
+                }
+            );
+            Yii::$container->set(
+                ElementAccessRepositoryInterface::class,
+                function ($container) {
+                    return new ElementAccessCachedRepository(
+                        new ElementAccessRepository(
+                            $container->get(ElementAccessItemRepository::class),
+                            ElementAccess::class
+                        )
+                    );
+                }
+            );
+        }
 
         ElementHtml::$elementCheckerService = Yii::$container->get(ElementCheckerService::class);
     }

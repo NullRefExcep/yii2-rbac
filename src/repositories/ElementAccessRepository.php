@@ -5,10 +5,11 @@ namespace nullref\rbac\repositories;
 use nullref\rbac\ar\ElementAccess;
 use nullref\rbac\ar\ElementAccessItem;
 use nullref\rbac\forms\ElementAccessForm;
+use nullref\rbac\repositories\interfaces\ElementAccessRepositoryInterface;
 
-class ElementAccessRepository extends AbstractRepository
+class ElementAccessRepository extends AbstractRepository implements ElementAccessRepositoryInterface
 {
-    /** @var ElementAccessRepository */
+    /** @var ElementAccessItemRepository */
     private $elementAccessItemRepository;
 
     /**
@@ -79,8 +80,8 @@ class ElementAccessRepository extends AbstractRepository
     public function saveWithItems(ElementAccessForm $form)
     {
         $elementAccess = new ElementAccess([
-            'identifier' => $form->identifier,
-            'description'   => $form->description,
+            'identifier'  => $form->identifier,
+            'description' => $form->description,
         ]);
         if ($this->save($elementAccess)) {
             $this->assignItems($elementAccess->id, $form->items);
@@ -103,5 +104,4 @@ class ElementAccessRepository extends AbstractRepository
 
         return false;
     }
-
 }

@@ -7,8 +7,7 @@ use nullref\rbac\components\DBManager;
 use nullref\rbac\forms\AssignmentForm;
 use nullref\rbac\helpers\UserColumns;
 use nullref\rbac\helpers\UserFilter;
-use nullref\rbac\repositories\AuthAssignmentRepository;
-use nullref\rbac\services\AssignmentService;
+use nullref\rbac\repositories\interfaces\AuthAssignmentRepositoryInterface;
 use nullref\rbac\services\AuthTreeService;
 use Yii;
 use yii\helpers\Url;
@@ -16,13 +15,10 @@ use yii\data\ArrayDataProvider;
 
 class AssignmentController extends BaseController
 {
-    /** @var AssignmentService */
-    private $assignmentService;
-
     /** @var DBManager */
     private $manager;
 
-    /** @var AuthAssignmentRepository */
+    /** @var AuthAssignmentRepositoryInterface */
     private $authAssignmentRepository;
 
     /** @var AuthTreeService */
@@ -35,13 +31,11 @@ class AssignmentController extends BaseController
         $id,
         $module,
         $config = [],
-        AssignmentService $assignmentService,
         DBManager $manager,
-        AuthAssignmentRepository $authAssignmentRepository,
+        AuthAssignmentRepositoryInterface $authAssignmentRepository,
         AuthTreeService $authTree
     )
     {
-        $this->assignmentService = $assignmentService;
         $this->manager = $manager;
         $this->authAssignmentRepository = $authAssignmentRepository;
         $this->authTree = $authTree;
@@ -71,9 +65,9 @@ class AssignmentController extends BaseController
     {
         $model = Yii::createObject(AssignmentForm::class, [
             $this->manager,
-            $this->authAssignmentRepository
+            $this->authAssignmentRepository,
+            $id,
         ]);
-        $model->userId = $id;
 
         if ($model->load(Yii::$app->request->post()) && $model->updateAssignments()) {
             return $this->redirect(Url::to(['/rbac/assignment/index']));
@@ -81,7 +75,7 @@ class AssignmentController extends BaseController
 
         $treeStructure = $this->authTree->getArrayAuthTreeStructure(
             $this->authTree->getAuthTree(),
-            $this->assignmentService->getUserAssignments($id)
+            array_keys($this->authAssignmentRepository->getUserAssignments($id))
         );
         $username = Yii::createObject(UserFilter::class, [$this->users])->getUsername($id);
 

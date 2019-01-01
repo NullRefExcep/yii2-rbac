@@ -7,7 +7,7 @@ use nullref\rbac\components\BaseController;
 use nullref\rbac\filters\AccessControl;
 use nullref\rbac\forms\ActionAccessAssignForm;
 use nullref\rbac\forms\ActionAccessForm;
-use nullref\rbac\repositories\ActionAccessRepository;
+use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
 use nullref\rbac\repositories\AuthItemRepository;
 use nullref\rbac\services\ActionAccessService;
 use nullref\rbac\services\ActionReaderService;
@@ -38,7 +38,7 @@ class AccessController extends BaseController
     /** @var AuthItemRepository */
     private $authItemRepository;
 
-    /** @var ActionAccessRepository */
+    /** @var ActionAccessRepositoryInterface */
     private $actionAccessRepository;
 
     /** @var AuthTreeService */
@@ -53,7 +53,7 @@ class AccessController extends BaseController
         ActionAccessAssignForm $acaFrom,
         ActionAccessService $actionAccessService,
         AuthItemRepository $authItemRepository,
-        ActionAccessRepository $actionAccessRepository,
+        ActionAccessRepositoryInterface $actionAccessRepository,
         AuthTreeService $authTree
     )
     {

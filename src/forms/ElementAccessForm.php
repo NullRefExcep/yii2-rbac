@@ -3,7 +3,7 @@
 namespace nullref\rbac\forms;
 
 use nullref\rbac\ar\ElementAccess;
-use nullref\rbac\repositories\ElementAccessRepository;
+use nullref\rbac\repositories\interfaces\ElementAccessRepositoryInterface;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
@@ -19,16 +19,16 @@ class ElementAccessForm extends Model
     /** @var array */
     public $items;
 
-    /** @var ElementAccessRepository */
+    /** @var ElementAccessRepositoryInterface */
     protected $elementAccessRepository;
 
     /**
      * ActionAccessForm constructor.
      *
-     * @param ElementAccessRepository $elementAccessRepository
+     * @param ElementAccessRepositoryInterface $elementAccessRepository
      */
     public function __construct(
-        ElementAccessRepository $elementAccessRepository
+        ElementAccessRepositoryInterface $elementAccessRepository
     )
     {
         $this->elementAccessRepository = $elementAccessRepository;
