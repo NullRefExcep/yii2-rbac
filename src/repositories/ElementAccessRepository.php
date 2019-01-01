@@ -40,7 +40,7 @@ class ElementAccessRepository extends AbstractRepository implements ElementAcces
     {
         $element = $this->findOneByCondition(['identifier' => $identifier]);
         if ($element) {
-            return $this->elementAccessItemRepository->findActionItems($element->id);
+            return $this->elementAccessItemRepository->findItems($element->id);
         }
 
         return [];
@@ -52,7 +52,7 @@ class ElementAccessRepository extends AbstractRepository implements ElementAcces
             $items = [];
         }
 
-        $oldItems = $this->elementAccessItemRepository->findActionItems($elementId);
+        $oldItems = $this->elementAccessItemRepository->findItems($elementId);
 
         //Add new items
         foreach (array_diff($items, $oldItems) as $itemName) {

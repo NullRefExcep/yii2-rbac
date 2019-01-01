@@ -6,6 +6,7 @@ Advanced RBAC superstructure on yii2 RBAC, Dektrium extension
 **Main functions:**
 1. **Action access by roles and permissions**
 2. **UI element access by roles and permissions**
+3. **Model field access by scenarios,roles and permissions**
 
 **Basic set up:** 
 
@@ -107,4 +108,23 @@ use nullref\rbac\helpers\element\ElementHtml as A;
 <?= ElementHtml::a('a', Url::to(['a']), ['data-identificator' => 'a-0.11730500 1545142675']) ?>
 <?= ElementHtml::a('a', Url::to(['a', 'c' => 1]), ['a' => 'a', 'data-identificator' => 'a-0.11732500 1545142675']) ?>
 <?= A::a('a', Url::to(['a']), ['a' => 'a', 'data-identificator' => 'a-0.11734500 1545142675']) ?>
+```
+
+**Usage of Model field access:**
+
+In `Module.php` add array with aliases for models
+
+Ex:
+```
+   public $modelAliases = [
+          '@app/modules/myModule/models',
+   ];  
+```
+
+You have to use nullref\rbac\widgets\ActiveField field in your ActiveForm
+
+```
+ <?php $form = ActiveForm::begin([
+        'fieldClass' => nullref\rbac\widgets\ActiveField::class,
+ ]); ?>
 ```

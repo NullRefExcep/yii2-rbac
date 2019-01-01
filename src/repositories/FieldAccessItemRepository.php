@@ -4,7 +4,7 @@ namespace nullref\rbac\repositories;
 
 class FieldAccessItemRepository extends AbstractRepository
 {
-    public function findActionItems($fieldId)
+    public function findItems($fieldId)
     {
         return $this->ar::find()
             ->select(['auth_item_name'])

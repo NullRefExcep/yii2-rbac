@@ -46,7 +46,7 @@ class ElementAccessCachedRepository extends AbstractCachedRepository implements 
         $result = $this->repository->updateWithItems($form, $elementAccess);
 
         if ($result) {
-            $this->invalidate($form->identifier . '-element-items');
+            $this->invalidate($elementAccess->identifier . '-element-items');
         }
 
         return $result;

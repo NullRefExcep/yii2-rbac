@@ -27,6 +27,7 @@ use nullref\rbac\repositories\AuthItemRepository;
 use nullref\rbac\repositories\cached\ActionAccessCachedRepository;
 use nullref\rbac\repositories\cached\AuthAssigmentCachedRepository;
 use nullref\rbac\repositories\cached\ElementAccessCachedRepository;
+use nullref\rbac\repositories\cached\FieldAccessCachedRepository;
 use nullref\rbac\repositories\ElementAccessItemRepository;
 use nullref\rbac\repositories\ElementAccessRepository;
 use nullref\rbac\repositories\FieldAccessItemRepository;
@@ -34,6 +35,7 @@ use nullref\rbac\repositories\FieldAccessRepository;
 use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
 use nullref\rbac\repositories\interfaces\AuthAssignmentRepositoryInterface;
 use nullref\rbac\repositories\interfaces\ElementAccessRepositoryInterface;
+use nullref\rbac\repositories\interfaces\FieldAccessRepositoryInterface;
 use nullref\rbac\repositories\PermissionRepository;
 use nullref\rbac\repositories\RoleRepository;
 use nullref\rbac\repositories\RuleRepository;
@@ -190,7 +192,7 @@ class Bootstrap implements BootstrapInterface
             }
         );
         Yii::$container->set(
-            FieldAccessRepository::class,
+            FieldAccessRepositoryInterface::class,
             function ($container) {
                 return new FieldAccessRepository(
                     $container->get(FieldAccessItemRepository::class),
@@ -253,6 +255,17 @@ class Bootstrap implements BootstrapInterface
                         new ElementAccessRepository(
                             $container->get(ElementAccessItemRepository::class),
                             ElementAccess::class
+                        )
+                    );
+                }
+            );
+            Yii::$container->set(
+                FieldAccessRepositoryInterface::class,
+                function ($container) {
+                    return new FieldAccessCachedRepository(
+                        new FieldAccessRepository(
+                            $container->get(FieldAccessItemRepository::class),
+                            FieldAccess::class
                         )
                     );
                 }

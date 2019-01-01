@@ -1,11 +1,9 @@
 <?php
 
-namespace nullref\rbac\migrations_ns;
-
 use nullref\core\traits\MigrationTrait;
 use yii\db\Migration;
 
-class M171216000000Rbac_create_model_access_tables extends Migration
+class m171216_000000_rbac_create_model_access_tables extends Migration
 {
     use MigrationTrait;
 

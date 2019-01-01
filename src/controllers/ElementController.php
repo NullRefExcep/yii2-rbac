@@ -2,7 +2,6 @@
 
 namespace nullref\rbac\controllers;
 
-use nullref\rbac\ar\ActionAccess;
 use nullref\rbac\ar\ElementAccess;
 use nullref\rbac\components\BaseController;
 use nullref\rbac\filters\AccessControl;
@@ -207,7 +206,7 @@ class ElementController extends BaseController
     }
 
     /**
-     * Updates an existing ActionAccess model.
+     * Updates an existing ElementAccess model.
      * If update is successful, the browser will be redirected to the 'view' page.
      *
      * @param integer $id

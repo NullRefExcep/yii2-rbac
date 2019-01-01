@@ -39,6 +39,12 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
     ];
 
     /** @var array */
+    public $modelAliases = [
+        '@nullref/rbac/ar',
+        '@nullref/rbac/form',
+    ];
+
+    /** @var array */
     public $viewPathAliases = [];
 
     /** @var array */
@@ -86,6 +92,11 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
                     'label' => Yii::t('rbac', 'Elements access'),
                     'icon'  => FA::_EXTERNAL_LINK,
                     'url'   => '/rbac/element/',
+                ],
+                [
+                    'label' => Yii::t('rbac', 'Fields access'),
+                    'icon'  => FA::_TEXT_HEIGHT,
+                    'url'   => '/rbac/field/',
                 ],
                 [
                     'label' => Yii::t('rbac', 'Assignments'),

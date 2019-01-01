@@ -30,29 +30,29 @@ class ActionAccessCachedRepository extends AbstractCachedRepository implements A
     public function findOneWithAuthItems($id)
     {
         $ar = $this->repository->getAr();
-        $items = $ar::getDb()->cache(
+        $item = $ar::getDb()->cache(
             function () use ($id) {
                 return $this->repository->findOneWithAuthItems($id);
             },
             null,
-            new TagDependency(['tags' => $id . '-action-items'])
+            new TagDependency(['tags' => $id . '-action'])
         );
 
-        return $items;
+        return $item;
     }
 
     public function findOneByMCA($module, $controller, $action)
     {
         $ar = $this->repository->getAr();
-        $items = $ar::getDb()->cache(
+        $item = $ar::getDb()->cache(
             function () use ($module, $controller, $action) {
                 return $this->repository->findOneByMCA($module, $controller, $action);
             },
             null,
-            new TagDependency(['tags' => $module . '-' . $controller . '-' . $action . '-action-items'])
+            new TagDependency(['tags' => $module . '-' . $controller . '-' . $action . '-action'])
         );
 
-        return $items;
+        return $item;
     }
 
     public function updateWithItems(ActionAccessForm $form, ActionAccess $actionAccess)
@@ -60,8 +60,8 @@ class ActionAccessCachedRepository extends AbstractCachedRepository implements A
         $result = $this->repository->updateWithItems($form, $actionAccess);
 
         if ($result) {
-            $this->invalidate($form->module . '-' . $form->controller . '-' . $form->action . '-action-items');
-            $this->invalidate( $actionAccess->id . '-action-items');
+            $this->invalidate($form->module . '-' . $form->controller . '-' . $form->action . '-action');
+            $this->invalidate( $actionAccess->id . '-action');
         }
 
         return $result;

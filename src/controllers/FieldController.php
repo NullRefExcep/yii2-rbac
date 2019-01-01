@@ -3,15 +3,15 @@
 namespace nullref\rbac\controllers;
 
 use nullref\rbac\ar\ActionAccess;
+use nullref\rbac\ar\FieldAccess;
 use nullref\rbac\components\BaseController;
 use nullref\rbac\filters\AccessControl;
-use nullref\rbac\forms\ActionAccessAssignForm;
-use nullref\rbac\forms\ActionAccessForm;
-use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
+use nullref\rbac\forms\FieldAccessForm;
 use nullref\rbac\repositories\AuthItemRepository;
-use nullref\rbac\services\ActionAccessService;
-use nullref\rbac\services\ActionReaderService;
+use nullref\rbac\repositories\interfaces\FieldAccessRepositoryInterface;
 use nullref\rbac\services\AuthTreeService;
+use nullref\rbac\services\FieldAccessService;
+use nullref\rbac\services\FieldReaderService;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
@@ -19,27 +19,24 @@ use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 
 /**
- * AccessController implements the CRUD actions for ControllerAccess model.
+ * FieldController implements the CRUD actions for FieldAccess model.
  */
-class AccessController extends BaseController
+class FieldController extends BaseController
 {
-    /** @var ActionReaderService */
-    private $actionReader;
+    /** @var FieldReaderService */
+    private $fieldReader;
 
-    /** @var ActionAccessForm */
-    private $acFrom;
+    /** @var FieldAccessForm */
+    private $fieldAccessForm;
 
-    /** @var ActionAccessAssignForm */
-    private $acaFrom;
-
-    /** @var ActionAccessService */
-    private $actionAccessService;
+    /** @var FieldAccessService */
+    private $fieldAccessService;
 
     /** @var AuthItemRepository */
     private $authItemRepository;
 
-    /** @var ActionAccessRepositoryInterface */
-    private $actionAccessRepository;
+    /** @var FieldAccessRepositoryInterface */
+    private $fieldAccessRepository;
 
     /** @var AuthTreeService */
     private $authTree;
@@ -48,21 +45,19 @@ class AccessController extends BaseController
         $id,
         $module,
         $config = [],
-        ActionReaderService $actionReader,
-        ActionAccessForm $acFrom,
-        ActionAccessAssignForm $acaFrom,
-        ActionAccessService $actionAccessService,
+        FieldReaderService $fieldReader,
+        FieldAccessForm $fieldAccessForm,
+        FieldAccessService $fieldAccessService,
         AuthItemRepository $authItemRepository,
-        ActionAccessRepositoryInterface $actionAccessRepository,
+        FieldAccessRepositoryInterface $fieldAccessRepository,
         AuthTreeService $authTree
     )
     {
-        $this->actionReader = $actionReader;
-        $this->acFrom = $acFrom;
-        $this->acaFrom = $acaFrom;
-        $this->actionAccessService = $actionAccessService;
+        $this->fieldReader = $fieldReader;
+        $this->fieldAccessForm = $fieldAccessForm;
+        $this->fieldAccessService = $fieldAccessService;
         $this->authItemRepository = $authItemRepository;
-        $this->actionAccessRepository = $actionAccessRepository;
+        $this->fieldAccessRepository = $fieldAccessRepository;
         $this->authTree = $authTree;
 
         parent::__construct($id, $module, $config);
@@ -84,13 +79,13 @@ class AccessController extends BaseController
         ];
     }
 
-    public function actionControllers($selected = '')
+    public function actionScenarios($selected = '')
     {
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
-                $module = $parents[0];
-                $out = $this->actionReader->getControllersJs($module);
+                $model = $parents[0];
+                $out = $this->fieldReader->getScenariosJs($model);
                 echo Json::encode(['output' => $out, 'selected' => $selected]);
 
                 return;
@@ -99,14 +94,14 @@ class AccessController extends BaseController
         echo Json::encode(['output' => '', 'selected' => '']);
     }
 
-    public function actionActions($selected = '')
+    public function actionAttributes($selected = '')
     {
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
-                $module = $parents[0];
-                $controller = $parents[1];
-                $out = $this->actionReader->getActionsJs($module, $controller);
+                $model = $parents[0];
+                $scenario = $parents[1];
+                $out = $this->fieldReader->getAttributesJs($model, $scenario);
                 echo Json::encode(['output' => $out, 'selected' => $selected]);
 
                 return;
@@ -116,13 +111,13 @@ class AccessController extends BaseController
     }
 
     /**
-     * Lists all ControllerAccess models.
+     * Lists all FieldAccess models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => ActionAccess::find(),
+            'query' => FieldAccess::find(),
         ]);
 
         return $this->render('index', [
@@ -131,7 +126,7 @@ class AccessController extends BaseController
     }
 
     /**
-     * Displays a single ControllerAccess model.
+     * Displays a single FieldAccess model.
      *
      * @param integer $id
      *
@@ -146,29 +141,29 @@ class AccessController extends BaseController
     }
 
     /**
-     * Creates a new ControllerAccess model.
+     * Creates a new FieldAccess model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = $this->acFrom;
-        $modules = $this->actionReader->getModules();
-        $treeStructure = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
+        $model = $this->fieldAccessForm;
+        $models = $this->fieldReader->getModels();
+        $tree = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
 
         if ($model->load(Yii::$app->request->post()) && $saveId = $model->save()) {
             return $this->redirect(['view', 'id' => $saveId]);
         } else {
             return $this->render('create', [
-                'model'   => $model,
-                'modules' => $modules,
-                'tree'    => $treeStructure,
+                'model'  => $model,
+                'models' => $models,
+                'tree'   => $tree,
             ]);
         }
     }
 
     /**
-     * Updates an existing ActionAccess model.
+     * Updates an existing FieldAccess model.
      * If update is successful, the browser will be redirected to the 'view' page.
      *
      * @param integer $id
@@ -180,29 +175,29 @@ class AccessController extends BaseController
     {
         $ar = $this->findModel($id);
 
-        $model = $this->acFrom;
+        $model = $this->fieldAccessForm;
         $model->loadWithAR($ar);
-        $modules = $this->actionReader->getModules();
+        $models = $this->fieldReader->getModels();
 
         $tree = $this->authTree->getArrayAuthTreeStructure(
             $this->authTree->getAuthTree(),
-            $this->actionAccessService->getItems($ar)
+            $this->fieldAccessService->getItems($ar)
         );
 
         if ($model->load(Yii::$app->request->post()) && $updateId = $model->update($ar)) {
             return $this->redirect(['view', 'id' => $updateId]);
         } else {
             return $this->render('update', [
-                'model'        => $model,
-                'modules'      => $modules,
-                'tree'         => $tree,
-                'actionAccess' => $ar,
+                'model'       => $model,
+                'models'      => $models,
+                'tree'        => $tree,
+                'fieldAccess' => $ar,
             ]);
         }
     }
 
     /**
-     * Deletes an existing ControllerAccess model.
+     * Deletes an existing FieldAccess model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      *
      * @param integer $id
@@ -211,13 +206,13 @@ class AccessController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->actionAccessRepository->delete(['id' => $id]);
+        $this->fieldAccessRepository->delete(['id' => $id]);
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the ControllerAccess model based on its primary key value.
+     * Finds the FieldAccess model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      *
      * @param integer $id
@@ -227,7 +222,7 @@ class AccessController extends BaseController
      */
     protected function findModel($id)
     {
-        if (($model = $this->actionAccessRepository->findOneWithAuthItems($id)) !== null) {
+        if (($model = $this->fieldAccessRepository->findOneWithAuthItems($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

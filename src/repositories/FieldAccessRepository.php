@@ -2,9 +2,12 @@
 
 namespace nullref\rbac\repositories;
 
+use nullref\rbac\ar\FieldAccess;
 use nullref\rbac\ar\FieldAccessItem;
+use nullref\rbac\forms\FieldAccessForm;
+use nullref\rbac\repositories\interfaces\FieldAccessRepositoryInterface;
 
-class FieldAccessRepository extends AbstractRepository
+class FieldAccessRepository extends AbstractRepository implements FieldAccessRepositoryInterface
 {
     /** @var FieldAccessItemRepository */
     private $fieldAccessItemRepository;
@@ -33,13 +36,35 @@ class FieldAccessRepository extends AbstractRepository
             ->one();
     }
 
+    public function findOneByMSA($model, $scenario, $attribute)
+    {
+        return $this->ar::find()
+            ->with(['authItems'])
+            ->where([
+                'model_name'     => $model,
+                'scenario_name'  => $scenario,
+                'attribute_name' => $attribute,
+            ])
+            ->one();
+    }
+
+    public function findItems($model, $scenario, $attribute)
+    {
+        $field = $this->findOneByMSA($model, $scenario, $attribute);
+        if ($field) {
+            return $this->fieldAccessItemRepository->findItems($field);
+        }
+
+        return [];
+    }
+
     public function assignItems($fieldId, $items)
     {
         if (!is_array($items)) {
             $items = [];
         }
 
-        $oldItems = $this->fieldAccessItemRepository->findActionItems($fieldId);
+        $oldItems = $this->fieldAccessItemRepository->findItems($fieldId);
 
         //Add new items
         foreach (array_diff($items, $oldItems) as $itemName) {
@@ -64,5 +89,36 @@ class FieldAccessRepository extends AbstractRepository
         return true;
     }
 
+    public function saveWithItems(FieldAccessForm $form)
+    {
+        $fieldAccess = new FieldAccess([
+            'model_name'     => $form->modelName,
+            'scenario_name'  => $form->scenarioName,
+            'attribute_name' => $form->attributeName,
+            'description'    => $form->description,
+        ]);
+        if ($this->save($fieldAccess)) {
+            $this->assignItems($fieldAccess->id, $form->items);
+
+            return $fieldAccess->id;
+        }
+
+        return false;
+    }
+
+    public function updateWithItems(FieldAccessForm $form, FieldAccess $fieldAccess)
+    {
+        $fieldAccess->model_name = $form->modelName;
+        $fieldAccess->scenario_name = $form->scenarioName;
+        $fieldAccess->attribute_name = $form->attributeName;
+        $fieldAccess->description = $form->description;
+        if ($this->save($fieldAccess)) {
+            $this->assignItems($fieldAccess->id, $form->items);
+
+            return $fieldAccess->id;
+        }
+
+        return false;
+    }
 
 }

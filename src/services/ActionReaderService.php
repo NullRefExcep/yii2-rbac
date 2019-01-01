@@ -10,7 +10,7 @@ class ActionReaderService
 
     function __construct()
     {
-        $this->map = self::getControllersAndActions();
+        $this->map = self::createMap();
     }
 
     public function getModules()
@@ -89,7 +89,7 @@ class ActionReaderService
         return $items;
     }
 
-    public static function getControllersAndActions()
+    public static function createMap()
     {
         $aliases = self::prepareAliases();
 

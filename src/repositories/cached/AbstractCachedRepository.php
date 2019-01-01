@@ -27,7 +27,7 @@ abstract class AbstractCachedRepository
     {
         //Call repository method
         if (method_exists($this->repository, $name)) {
-            return call_user_func([$this->repository, $name], $arguments);
+            return call_user_func_array([$this->repository, $name], $arguments);
         }
 
         return null;

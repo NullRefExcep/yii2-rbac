@@ -10,9 +10,10 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%field_access}}".
  *
  * @property int $id
- * @property string $model
+ * @property string $model_name
+ * @property string $scenario_name
+ * @property string $attribute_name
  * @property string $description
- * @property string $field
  *
  * @property AuthItem[] $authItems
  */
@@ -35,7 +36,7 @@ class FieldAccess extends ActiveRecord
     {
         return [
             [['description'], 'string'],
-            [['model', 'field'], 'string', 'max' => 255],
+            [['model_name', 'scenario_name', 'attribute_name'], 'string', 'max' => 255],
         ];
     }
 
@@ -45,10 +46,11 @@ class FieldAccess extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'          => Yii::t('rbac', 'ID'),
-            'model'       => Yii::t('rbac', 'Model'),
-            'description' => Yii::t('rbac', 'Description'),
-            'field'       => Yii::t('rbac', 'Field'),
+            'id'         => Yii::t('rbac', 'ID'),
+            'model_name' => Yii::t('rbac', 'Model'),
+            'scenario_name'  => Yii::t('rbac', 'Scenario'),
+            'attribute_name' => Yii::t('rbac', 'Attribute'),
+            'description'    => Yii::t('rbac', 'Description'),
         ];
     }
 
