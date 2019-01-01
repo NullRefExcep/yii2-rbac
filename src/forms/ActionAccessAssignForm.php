@@ -2,7 +2,7 @@
 
 namespace nullref\rbac\forms;
 
-use nullref\rbac\repositories\ActionAccessRepository;
+use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
 use Yii;
 use yii\base\Model;
 
@@ -14,16 +14,16 @@ class ActionAccessAssignForm extends Model
     /** @var array */
     public $items;
 
-    /** @var ActionAccessRepository */
+    /** @var ActionAccessRepositoryInterface */
     private $repository;
 
     /**
      * ActionAccessForm constructor.
      *
-     * @param ActionAccessRepository $repository
+     * @param ActionAccessRepositoryInterface $repository
      */
     public function __construct(
-        ActionAccessRepository $repository
+        ActionAccessRepositoryInterface $repository
     )
     {
         $this->repository = $repository;

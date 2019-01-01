@@ -3,8 +3,9 @@
 namespace nullref\rbac\repositories;
 
 use nullref\rbac\components\DBManager;
+use nullref\rbac\repositories\interfaces\AuthAssignmentRepositoryInterface;
 
-class AuthAssignmentRepository extends AbstractRepository
+class AuthAssignmentRepository extends AbstractRepository implements AuthAssignmentRepositoryInterface
 {
     /** @var DBManager */
     private $manager;
@@ -17,6 +18,11 @@ class AuthAssignmentRepository extends AbstractRepository
         $this->manager = $manager;
 
         parent::__construct($activeRecord);
+    }
+
+    public function getUserAssignments($userId)
+    {
+        return $this->manager->getItemsByUserId($userId);
     }
 
     public function updateAssignments($userId, $items)

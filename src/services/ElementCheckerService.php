@@ -3,7 +3,8 @@
 namespace nullref\rbac\services;
 
 use nullref\rbac\Module;
-use nullref\rbac\repositories\ElementAccessRepository;
+use nullref\rbac\repositories\interfaces\AuthAssignmentRepositoryInterface;
+use nullref\rbac\repositories\interfaces\ElementAccessRepositoryInterface;
 use Yii;
 use yii\web\User;
 
@@ -12,25 +13,25 @@ class ElementCheckerService
     /** @var object */
     private $userComponent;
 
-    /** @var AssignmentService */
-    private $assignmentService;
+    /** @var AuthAssignmentRepositoryInterface */
+    private $authAssignmentRepository;
 
     /** @var ElementAccessService */
     private $elementAccessService;
 
-    /** @var ElementAccessRepository */
+    /** @var ElementAccessRepositoryInterface */
     private $elementAccessRepository;
 
     /** @var User|null */
     private $userIdentity;
 
     public function __construct(
-        AssignmentService $assignmentService,
+        AuthAssignmentRepositoryInterface $authAssignmentRepository,
         ElementAccessService $elementAccessService,
-        ElementAccessRepository $elementAccessRepository
+        ElementAccessRepositoryInterface $elementAccessRepository
     )
     {
-        $this->assignmentService = $assignmentService;
+        $this->authAssignmentRepository = $authAssignmentRepository;
         $this->elementAccessService = $elementAccessService;
         $this->elementAccessRepository = $elementAccessRepository;
 
@@ -44,7 +45,7 @@ class ElementCheckerService
         $identity = $this->userIdentity;
         if ($identity) {
             $userId = $identity->getId();
-            $userItems = $this->assignmentService->getUserAssignments($userId);
+            $userItems = array_keys($this->authAssignmentRepository->getUserAssignments($userId));
             $elementItems = $this->elementAccessRepository->findItems($identifier);
             if (empty($elementItems)) {
                 return true;

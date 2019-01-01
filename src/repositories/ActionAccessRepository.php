@@ -5,8 +5,9 @@ namespace nullref\rbac\repositories;
 use nullref\rbac\ar\ActionAccess;
 use nullref\rbac\ar\ActionAccessItem;
 use nullref\rbac\forms\ActionAccessForm;
+use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
 
-class ActionAccessRepository extends AbstractRepository
+class ActionAccessRepository extends AbstractRepository implements ActionAccessRepositoryInterface
 {
     /** @var ActionAccessItemRepository */
     private $aaiRepository;

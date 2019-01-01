@@ -8,7 +8,7 @@ use nullref\rbac\components\BaseController;
 use nullref\rbac\filters\AccessControl;
 use nullref\rbac\forms\ElementAccessForm;
 use nullref\rbac\repositories\AuthItemRepository;
-use nullref\rbac\repositories\ElementAccessRepository;
+use nullref\rbac\repositories\interfaces\ElementAccessRepositoryInterface;
 use nullref\rbac\services\AuthTreeService;
 use nullref\rbac\services\ElementAccessService;
 use Yii;
@@ -33,7 +33,7 @@ class ElementController extends BaseController
     /** @var AuthItemRepository */
     private $authItemRepository;
 
-    /** @var ElementAccessRepository */
+    /** @var ElementAccessRepositoryInterface */
     private $elementAccessRepository;
 
     /** @var AuthTreeService */
@@ -46,7 +46,7 @@ class ElementController extends BaseController
         ElementAccessForm $elementAccessForm,
         ElementAccessService $elementAccessService,
         AuthItemRepository $authItemRepository,
-        ElementAccessRepository $elementAccessRepository,
+        ElementAccessRepositoryInterface $elementAccessRepository,
         AuthTreeService $authTree
     )
     {

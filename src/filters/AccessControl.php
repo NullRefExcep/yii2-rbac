@@ -5,7 +5,7 @@ namespace nullref\rbac\filters;
 use nullref\rbac\ar\ActionAccess;
 use nullref\rbac\ar\AuthItem;
 use nullref\rbac\Module;
-use nullref\rbac\repositories\ActionAccessRepository;
+use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
 use Yii;
 use yii\base\InlineAction;
 use yii\filters\AccessControl as BaseAccessControl;
@@ -21,7 +21,7 @@ class AccessControl extends BaseAccessControl
     /** @var Controller */
     public $controller;
 
-    /** @var ActionAccessRepository */
+    /** @var ActionAccessRepositoryInterface */
     protected $actionAccessRepository;
 
     /** @var object */
@@ -37,7 +37,7 @@ class AccessControl extends BaseAccessControl
         $this->userComponent = $module->userComponent;
         $this->userIdentity = $module->getUserIdentity();
 
-        $this->actionAccessRepository = Yii::$container->get(ActionAccessRepository::class);
+        $this->actionAccessRepository = Yii::$container->get(ActionAccessRepositoryInterface::class);
 
         /** @var Controller $controller */
         $controllerClass = $this->controller;
@@ -54,7 +54,7 @@ class AccessControl extends BaseAccessControl
          */
         $this->denyCallback = function ($rule, $action) {
             $controller = $action->controller;
-            if ($this->userIdentity->isGuest) {
+            if ($this->userComponent->isGuest) {
                 return $controller->redirect('/user/login');
             }
             Yii::$app->session->setFlash('warning', Yii::t('rbac', 'You don\'t have permission to')

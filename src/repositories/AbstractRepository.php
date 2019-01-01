@@ -15,6 +15,11 @@ abstract class AbstractRepository
         $this->ar = $activeRecord;
     }
 
+    public function getAr()
+    {
+        return $this->ar;
+    }
+
     public function findOne($id)
     {
         return $this->ar::find()
@@ -79,6 +84,8 @@ abstract class AbstractRepository
     }
 
     /**
+     * @param $condition
+     *
      * @return void
      */
     public function delete($condition)
