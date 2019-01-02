@@ -78,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'attribute' => 'created_at',
-                    'label'     => Yii::t('rbac', 'Created at'),
+                    'label'     => Yii::t('rbac', 'Created At'),
                     'format'    => 'datetime',
                     'options'   => [
                         'style' => 'width: 20%',
@@ -86,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'attribute' => 'updated_at',
-                    'label'     => Yii::t('rbac', 'Updated at'),
+                    'label'     => Yii::t('rbac', 'Updated At'),
                     'format'    => 'datetime',
                     'options'   => [
                         'style' => 'width: 20%',

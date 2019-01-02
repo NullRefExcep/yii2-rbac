@@ -11,7 +11,7 @@ use yii\widgets\DetailView;
  */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Field Access`s'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Field Access'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="field-access-view">

@@ -16,7 +16,7 @@ use yii\web\View;
 $this->title = Yii::t('rbac', 'Update {modelClass}: ', [
         'modelClass' => 'Field Access',
     ]) . ' ' . $fieldAccess->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Field Access`s'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Field Access'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $fieldAccess->id, 'url' => ['view', 'id' => $fieldAccess->id]];
 $this->params['breadcrumbs'][] = Yii::t('rbac', 'Update');
 ?>

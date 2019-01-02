@@ -84,17 +84,17 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
             'order' => 6,
             'items' => [
                 [
-                    'label' => Yii::t('rbac', 'Actions access'),
+                    'label' => Yii::t('rbac', 'Action access'),
                     'icon'  => FA::_MAP_SIGNS,
                     'url'   => '/rbac/access/',
                 ],
                 [
-                    'label' => Yii::t('rbac', 'Elements access'),
+                    'label' => Yii::t('rbac', 'Elements Access'),
                     'icon'  => FA::_EXTERNAL_LINK,
                     'url'   => '/rbac/element/',
                 ],
                 [
-                    'label' => Yii::t('rbac', 'Fields access'),
+                    'label' => Yii::t('rbac', 'Fields Access'),
                     'icon'  => FA::_TEXT_HEIGHT,
                     'url'   => '/rbac/field/',
                 ],

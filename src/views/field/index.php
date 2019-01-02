@@ -10,7 +10,7 @@ use yii\web\View;
  * @var $dataProvider ActiveDataProvider
  */
 
-$this->title = Yii::t('rbac', 'Field Access`s');
+$this->title = Yii::t('rbac', 'Field Access');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="field-access-index">

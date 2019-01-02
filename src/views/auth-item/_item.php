@@ -40,7 +40,7 @@ $action = ($node['type'] == Item::TYPE_ROLE) ? 'role' : 'permission';
             [$action . '/delete', 'name' => $node['name']],
             [
                 'data'  => [
-                    'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                    'confirm' => Yii::t('rbac', 'Are you sure you want to delete this item?'),
                     'method'  => 'post',
                 ],
                 'class' => 'btn btn-xs btn-danger',

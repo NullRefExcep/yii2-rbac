@@ -94,7 +94,7 @@ class RuleForm extends Model
                             $rule = Yii::createObject($this->class);
 
                             if (!($rule instanceof $class)) {
-                                $this->addError('class', Yii::t('rbac', 'Rule class must extend "yii\rbac\Rule"'));
+                                $this->addError('class', Yii::t('rbac', 'Rule class must extend'). ' yii\rbac\Rule');
                             }
                         } catch (InvalidConfigException $e) {
                             $this->addError('class', Yii::t('rbac', 'Rule class can not be instantiated'));

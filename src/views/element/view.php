@@ -11,7 +11,7 @@ use yii\web\View;
  */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Element Access`s'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Element Access'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="element-access-view">

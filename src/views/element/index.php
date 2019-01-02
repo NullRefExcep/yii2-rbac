@@ -10,7 +10,7 @@ use yii\web\View;
  * @var $dataProvider ActiveDataProvider
  */
 
-$this->title = Yii::t('rbac', 'Element Access`s');
+$this->title = Yii::t('rbac', 'Element Access');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="element-access-index">
