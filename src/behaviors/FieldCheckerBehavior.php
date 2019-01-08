@@ -68,7 +68,16 @@ class FieldCheckerBehavior extends Behavior
                             }
                         }
                         if (!$allowed) {
-                            $currentModel->addError($attributeName, Yii::t('rbac', 'You are not allowed to work with attribute "{attribute}"'));
+                            $currentModel->addError(
+                                $attributeName,
+                                Yii::t(
+                                    'rbac',
+                                    'You are not allowed to work with attribute "{attribute}"',
+                                    [
+                                        'attribute' => $attributeName,
+                                    ]
+                                )
+                            );
                         }
                     }
                 }
