@@ -51,4 +51,13 @@ class ElementAccessCachedRepository extends AbstractCachedRepository implements 
 
         return $result;
     }
+
+    public function delete($condition)
+    {
+        $model = $this->repository->findByCondition($condition);
+        if ($model) {
+            $this->invalidate($model->identifier . '-element-items');
+        }
+        $this->repository->delete($condition);
+    }
 }

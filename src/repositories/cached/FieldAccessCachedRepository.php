@@ -69,6 +69,20 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
         return $items;
     }
 
+    public function findItemsForScenario($model, $scenario)
+    {
+        $ar = $this->repository->getAr();
+        $items = $ar::getDb()->cache(
+            function () use ($model, $scenario) {
+                return $this->repository->findItemsForScenario($model, $scenario);
+            },
+            null,
+            new TagDependency(['tags' => $model . '-' . $scenario . '-scenario-field-items'])
+        );
+
+        return $items;
+    }
+
     public function updateWithItems(FieldAccessForm $form, FieldAccess $fieldAccess)
     {
         $result = $this->repository->updateWithItems($form, $fieldAccess);
@@ -86,8 +100,36 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
                 $fieldAccess->attribute_name . '-field'
             );
             $this->invalidate($fieldAccess->id . '-field');
+            $this->invalidate(
+                $fieldAccess->model_name . '-' .
+                $fieldAccess->scenario_name . '-' . '-scenario-field-items'
+            );
         }
 
         return $result;
+    }
+
+    public function delete($condition)
+    {
+        $model = $this->repository->findByCondition($condition);
+        if ($model) {
+            $this->invalidate(
+                $model->model . '-' .
+                $model->scenario . '-' .
+                $model->attribute . '-field-items'
+            );
+            $this->invalidate($model->id . '-field-items');
+            $this->invalidate(
+                $model->model . '-' .
+                $model->scenario . '-' .
+                $model->attribute . '-field'
+            );
+            $this->invalidate($model->id . '-field');
+            $this->invalidate(
+                $model->model_name . '-' .
+                $model->scenario_name . '-' . '-scenario-field-items'
+            );
+        }
+        $this->repository->delete($condition);
     }
 }

@@ -6,6 +6,7 @@ use nullref\rbac\ar\FieldAccess;
 use nullref\rbac\ar\FieldAccessItem;
 use nullref\rbac\forms\FieldAccessForm;
 use nullref\rbac\repositories\interfaces\FieldAccessRepositoryInterface;
+use yii\helpers\ArrayHelper;
 
 class FieldAccessRepository extends AbstractRepository implements FieldAccessRepositoryInterface
 {
@@ -48,11 +49,41 @@ class FieldAccessRepository extends AbstractRepository implements FieldAccessRep
             ->one();
     }
 
+    public function findByMSAsArray($model, $scenario)
+    {
+        return $this->ar::find()
+            ->with(['authItems'])
+            ->where([
+                'model_name'     => $model,
+                'scenario_name'  => $scenario,
+            ])
+            ->asArray()
+            ->all();
+    }
+
     public function findItems($model, $scenario, $attribute)
     {
         $field = $this->findOneByMSA($model, $scenario, $attribute);
         if ($field) {
             return $this->fieldAccessItemRepository->findItems($field);
+        }
+
+        return [];
+    }
+
+    public function findItemsForScenario($model, $scenario) {
+        $scenarioFields = $this->findByMSAsArray($model, $scenario);
+        if ($scenarioFields) {
+            $items = [];
+            foreach ($scenarioFields as $scenarioField) {
+                if (!array_key_exists($scenarioField['attribute_name'], $items)) {
+                    $items[$scenarioField['attribute_name']] = [];
+                }
+                $authItemNames = ArrayHelper::getColumn($scenarioField['authItems'], 'name');
+                $items[$scenarioField['attribute_name']] = $authItemNames;
+            }
+
+            return $items;
         }
 
         return [];

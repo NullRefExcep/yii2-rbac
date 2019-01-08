@@ -54,6 +54,7 @@ or behavior() method has contain next item:
 ```
 
 **Usage of UI element access:**
+
 To use this functionality you have to:
 - use widget in base layout
 ```
@@ -112,16 +113,27 @@ use nullref\rbac\helpers\element\ElementHtml as A;
 
 **Usage of Model field access:**
 
-In `Module.php` add array with aliases for models
+To use this functionality you have to:
+- add array with aliases for models in `Module.php`
 
-Ex:
 ```
    public $modelAliases = [
           '@app/modules/myModule/models',
    ];  
 ```
+- add behavior in your Model and **validate** your model before save
 
-You have to use nullref\rbac\widgets\ActiveField field in your ActiveForm
+```
+public function behaviors()
+{
+    return [
+        'checkFields' => [
+            'class' => FieldCheckerBehavior::class,
+        ],
+    ];
+}
+```
+- use nullref\rbac\widgets\ActiveField field in your ActiveForm
 
 ```
  <?php $form = ActiveForm::begin([

@@ -13,5 +13,7 @@ interface FieldAccessRepositoryInterface
     
     public function findItems($model, $scenario, $attribute);
 
+    public function findItemsForScenario($model, $scenario);
+
     public function updateWithItems(FieldAccessForm $form, FieldAccess $elementAccess);
 }

@@ -61,9 +61,19 @@ class ActionAccessCachedRepository extends AbstractCachedRepository implements A
 
         if ($result) {
             $this->invalidate($form->module . '-' . $form->controller . '-' . $form->action . '-action');
-            $this->invalidate( $actionAccess->id . '-action');
+            $this->invalidate($actionAccess->id . '-action');
         }
 
         return $result;
+    }
+
+    public function delete($condition)
+    {
+        $model = $this->repository->findByCondition($condition);
+        if ($model) {
+            $this->invalidate($model->module . '-' . $model->controller . '-' . $model->action . '-action');
+            $this->invalidate($model->id . '-action');
+        }
+        $this->repository->delete($condition);
     }
 }
