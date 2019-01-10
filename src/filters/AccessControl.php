@@ -37,14 +37,16 @@ class AccessControl extends BaseAccessControl
         $this->userComponent = $module->userComponent;
         $this->userIdentity = $module->getUserIdentity();
 
+        $loginUrl = $module->loginUrl;
+
         $this->actionAccessRepository = Yii::$container->get(ActionAccessRepositoryInterface::class);
 
         /** @var Controller $controller */
         $controllerClass = $this->controller;
-        $module = $controllerClass->module->id;
+        $controllerModule = $controllerClass->module->id;
         $controller = $controllerClass->id;
         $action = $controllerClass->action->id;
-        $this->rules = $this->getRules($module, $controller, $action);
+        $this->rules = $this->getRules($controllerModule, $controller, $action);
 
         /**
          * @param $rule AccessRule|null
@@ -52,15 +54,15 @@ class AccessControl extends BaseAccessControl
          *
          * @return Response
          */
-        $this->denyCallback = function ($rule, $action) {
+        $this->denyCallback = function ($rule, $action) use ($loginUrl) {
             $controller = $action->controller;
             if ($this->userComponent->isGuest) {
-                return $controller->redirect('/user/login');
+                return $controller->redirect($loginUrl);
             }
             Yii::$app->session->setFlash('warning', Yii::t('rbac', 'You don\'t have permission to')
                 . ' ' . Yii::t('rbac', 'do this action'));
 
-            return $controller->redirect(Yii::$app->request->referrer);
+            return $controller->redirect(Yii::$app->request->referrer ?? Yii::$app->getHomeUrl());
         };
 
         parent::init();
