@@ -8,6 +8,24 @@ Advanced RBAC superstructure on yii2 RBAC, Dektrium extension
 2. **UI element access by roles and permissions**
 3. **Model field access by scenarios,roles and permissions**
 
+**Installation**
+
+The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+
+Either run
+
+```
+php composer.phar require --prefer-dist nullref/yii2-rbac "*"
+```
+
+or add
+
+```
+"nullref/yii2-rbac": "*"
+```
+
+to the require section of your `composer.json` file.
+
 **Basic set up:** 
 
 In modules configuration on 'rbac' section you 
