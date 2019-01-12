@@ -88,27 +88,18 @@ class ElementController extends BaseController
 
         $model = $this->elementAccessForm;
         $ar = $this->elementAccessRepository->findOneByCondition(['identifier' => $identifier]);
+        $elementItems = [];
         if ($ar) {
             $model->loadWithAR($ar);
-            $tree = $this->authTree->getArrayAuthTreeStructure(
-                $this->authTree->getAuthTree(),
-                $this->elementAccessService->getItems($ar)
-            );
-        } else {
-            $tree = $this->authTree->getArrayAuthTreeStructure($this->authTree->getAuthTree());
+            $elementItems = $this->elementAccessService->getItems($ar);
         }
-        $selectedFiltered = [];
-        foreach ($tree as $selection) {
-            if ($selection['selected']) {
-                $selectedFiltered[] = $selection['title'];
-            }
-        }
-        $selected = Json::encode($selectedFiltered);
-        $tree = ArrayHelper::map($tree, 'title', 'title');
+
+        $items = $this->authItemRepository->getMap('name', 'name');
+        $selected = Json::encode($elementItems);
 
         return $this->renderAjax('element-config', [
             'model'         => $model,
-            'tree'          => $tree,
+            'items'          => $items,
             'selected'      => $selected,
             'elementAccess' => $ar,
         ]);

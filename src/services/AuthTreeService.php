@@ -18,11 +18,11 @@ class AuthTreeService
             foreach ($children as $child) {
                 $childItem = $child->getItem();
                 $arrayTree[$childItem->name] = [
-                  'name' =>  $childItem->name,
-                  'description' =>  $childItem->description,
-                  'type' => $childItem->type,
-                  'rule' => $childItem->rule_name,
-                  'children' => [],
+                    'name'        => $childItem->name,
+                    'description' => $childItem->description,
+                    'type'        => $childItem->type,
+                    'rule'        => $childItem->rule_name,
+                    'children'    => [],
                 ];
                 $innerChildren = $child->getChildren();
                 $innerChildrenAmount = count($innerChildren);
@@ -46,10 +46,10 @@ class AuthTreeService
             foreach ($children as $child) {
                 $childItem = $child->getItem();
                 $arrayTree[$i] = [
-                    'title' =>  $childItem->description,
-                    'key' => $childItem->name,
-                    'type' => $childItem->type,
-                    'rule' => $childItem->rule_name,
+                    'title'    => ($childItem->description) ? $childItem->description : $childItem->name,
+                    'key'      => $childItem->name,
+                    'type'     => $childItem->type,
+                    'rule'     => $childItem->rule_name,
                     'children' => [],
                     'selected' => in_array($childItem->name, $selected),
                 ];
@@ -65,7 +65,7 @@ class AuthTreeService
                 $i++;
             }
         }
-        
+
         return $arrayTree;
     }
 

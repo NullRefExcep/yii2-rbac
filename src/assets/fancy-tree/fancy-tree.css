@@ -11,7 +11,7 @@ span.fancytree-node.fancytree-active.fancytree-selected span.fancytree-title {
 }
 
 .fancytree-container {
-    overflow-y: scroll;
+    overflow-y: scroll !important;
     max-height: 200px;
 }
 

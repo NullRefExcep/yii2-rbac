@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var $this View
- * @var $tree array
+ * @var $items array
  * @var $selected array
  */
 
@@ -41,7 +41,7 @@ JS
         </div>
         <div class="col-lg-12">
             <?= $form->field($model, 'items')->widget(Select2::class, [
-                'data'    => $tree,
+                'data'    => $items,
                 'options' => [
                     'id'          => 'elementItems',
                     'placeholder' => Yii::t('rbac', 'Select items'),
