@@ -7,10 +7,8 @@ use nullref\rbac\forms\RoleForm;
 use nullref\rbac\repositories\RuleRepository;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\base\Model;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\widgets\ActiveForm;
 
 abstract class AbstractItemController extends BaseController
 {
@@ -66,6 +64,7 @@ abstract class AbstractItemController extends BaseController
      * @param string $parentName
      *
      * @return string|Response
+     * @throws InvalidConfigException
      */
     public function actionCreate($parentName = '')
     {
@@ -78,10 +77,9 @@ abstract class AbstractItemController extends BaseController
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->save()) {
-                return $this->redirect(['index']);
+                return $this->redirect(['/rbac/auth-item/']);
             }
         }
-
 
         return $this->render('create', [
             'model' => $model,
@@ -110,7 +108,7 @@ abstract class AbstractItemController extends BaseController
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->save()) {
-                return $this->redirect(['index']);
+                return $this->redirect(['/rbac/auth-item/']);
             }
         }
 

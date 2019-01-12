@@ -29,9 +29,11 @@ $action = ($node['type'] == Item::TYPE_ROLE) ? 'role' : 'permission';
         <?= Html::a(FA::i(FA::_PENCIL),
             [$action . '/update', 'name' => $node['name']],
             ['class' => 'btn btn-xs btn-primary']) ?>
-        <?= Html::a(FA::i(FA::_PLUS) . ' ' . Yii::t('rbac', 'Role'),
-            ['role/create', 'parentName' => $node['name']],
-            ['class' => 'btn btn-xs btn-success']) ?>
+        <?php if ($node['type'] == Item::TYPE_ROLE): ?>
+            <?= Html::a(FA::i(FA::_PLUS) . ' ' . Yii::t('rbac', 'Role'),
+                ['role/create', 'parentName' => $node['name']],
+                ['class' => 'btn btn-xs btn-success']) ?>
+        <?php endif; ?>
         <?= Html::a(FA::i(FA::_PLUS) . ' ' . Yii::t('rbac', 'Permission'),
             ['permission/create', 'parentName' => $node['name']],
             ['class' => 'btn btn-xs btn-warning']) ?>
