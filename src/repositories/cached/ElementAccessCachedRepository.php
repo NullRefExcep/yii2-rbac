@@ -41,6 +41,17 @@ class ElementAccessCachedRepository extends AbstractCachedRepository implements 
         return $items;
     }
 
+    public function saveWithItems(ElementAccessForm $form)
+    {
+        $result = $this->repository->saveWithItems($form);
+
+        if ($result) {
+            $this->invalidate($form->identifier . '-element-items');
+        }
+
+        return $result;
+    }
+
     public function updateWithItems(ElementAccessForm $form, ElementAccess $elementAccess)
     {
         $result = $this->repository->updateWithItems($form, $elementAccess);
@@ -54,7 +65,7 @@ class ElementAccessCachedRepository extends AbstractCachedRepository implements 
 
     public function delete($condition)
     {
-        $model = $this->repository->findByCondition($condition);
+        $model = $this->repository->findOneByCondition($condition);
         if ($model) {
             $this->invalidate($model->identifier . '-element-items');
         }

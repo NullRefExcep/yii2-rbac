@@ -55,6 +55,17 @@ class ActionAccessCachedRepository extends AbstractCachedRepository implements A
         return $item;
     }
 
+    public function saveWithItems(ActionAccessForm $form)
+    {
+        $result = $this->repository->saveWithItems($form);
+
+        if ($result) {
+            $this->invalidate($form->module . '-' . $form->controller . '-' . $form->action . '-action');
+        }
+
+        return $result;
+    }
+
     public function updateWithItems(ActionAccessForm $form, ActionAccess $actionAccess)
     {
         $result = $this->repository->updateWithItems($form, $actionAccess);
@@ -69,7 +80,7 @@ class ActionAccessCachedRepository extends AbstractCachedRepository implements A
 
     public function delete($condition)
     {
-        $model = $this->repository->findByCondition($condition);
+        $model = $this->repository->findOneByCondition($condition);
         if ($model) {
             $this->invalidate($model->module . '-' . $model->controller . '-' . $model->action . '-action');
             $this->invalidate($model->id . '-action');

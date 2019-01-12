@@ -83,6 +83,30 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
         return $items;
     }
 
+    public function saveWithItems(FieldAccessForm $form)
+    {
+        $result = $this->repository->saveWithItems($form);
+
+        if ($result) {
+            $this->invalidate(
+                $form->modelName . '-' .
+                $form->scenarioName . '-' .
+                $form->attributeName . '-field-items'
+            );
+            $this->invalidate(
+                $form->modelName . '-' .
+                $form->scenarioName . '-' .
+                $form->attributeName . '-field'
+            );
+            $this->invalidate(
+                $form->modelName . '-' .
+                $form->scenarioName . '-' . '-scenario-field-items'
+            );
+        }
+
+        return $result;
+    }
+
     public function updateWithItems(FieldAccessForm $form, FieldAccess $fieldAccess)
     {
         $result = $this->repository->updateWithItems($form, $fieldAccess);
@@ -111,7 +135,7 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
 
     public function delete($condition)
     {
-        $model = $this->repository->findByCondition($condition);
+        $model = $this->repository->findOneByCondition($condition);
         if ($model) {
             $this->invalidate(
                 $model->model . '-' .
