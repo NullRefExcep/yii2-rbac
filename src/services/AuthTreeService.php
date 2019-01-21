@@ -22,13 +22,8 @@ class AuthTreeService
                     'description' => $childItem->description,
                     'type'        => $childItem->type,
                     'rule'        => $childItem->rule_name,
-                    'children'    => [],
+                    'children'    => $this->getArrayAuthTree($child),
                 ];
-                $innerChildren = $child->getChildren();
-                $innerChildrenAmount = count($innerChildren);
-                if ($innerChildrenAmount > 0) {
-                    $arrayTree[$childItem->name]['children'] = $this->getArrayAuthTree($child);
-                }
             }
         }
 
@@ -50,23 +45,39 @@ class AuthTreeService
                     'key'      => $childItem->name,
                     'type'     => $childItem->type,
                     'rule'     => $childItem->rule_name,
-                    'children' => [],
+                    'children' => $this->getArrayAuthTreeStructure($child, $selected),
                     'selected' => in_array($childItem->name, $selected),
+                    'folder'   => true,
+                    'expanded' => true,
                 ];
-                $innerChildren = $child->getChildren();
-                $innerChildrenAmount = count($innerChildren);
-                if ($innerChildrenAmount > 0) {
-                    $arrayTree[$i]['children'] = $this->getArrayAuthTreeStructure($child, $selected);
-                    $arrayTree[$i]['folder'] = true;
-                    $arrayTree[$i]['expanded'] = true;
-                } else {
+                if ($arrayTree[$i]['children'] == []) {
                     unset($arrayTree[$i]['children']);
+                    $arrayTree[$i]['folder'] = false;
+                    $arrayTree[$i]['expanded'] = false;
                 }
                 $i++;
             }
         }
 
         return $arrayTree;
+    }
+
+    public function getArrayAuthList(AuthNode $node)
+    {
+        $arrayList = [];
+
+        $children = $node->getChildren();
+        $childrenAmount = count($children);
+        if ($childrenAmount > 0) {
+            foreach ($children as $child) {
+                $childItem = $child->getItem();
+                $childArray = $this->getArrayAuthList($child);
+                $arrayList[$childItem->name] = array_keys($childArray);
+                $arrayList = array_merge($arrayList, $childArray);
+            }
+        }
+
+        return $arrayList;
     }
 
     public function getAuthTree()
