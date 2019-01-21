@@ -43,7 +43,7 @@ class UserAccessService
             if ($item == $userItemName) {
                 return true;
             }
-            $childrenItemNames = array_keys($this->systemItems[$userItemName]);
+            $childrenItemNames = $this->systemItems[$userItemName];
             if (in_array($item, $childrenItemNames)) {
                 return true;
             }
