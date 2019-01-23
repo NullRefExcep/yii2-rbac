@@ -272,7 +272,9 @@ class Bootstrap implements BootstrapInterface
             );
         }
 
-        ElementHtml::$elementCheckerService = Yii::$container->get(ElementCheckerService::class);
+        if ($app instanceof WebApplication) {
+            ElementHtml::$elementCheckerService = Yii::$container->get(ElementCheckerService::class);
+        }
     }
 
     protected function setUserIdentity(Module $module)
