@@ -10,7 +10,7 @@ class FieldReaderService
 
     function __construct()
     {
-        $this->map = self::createMap();
+        $this->map = $this->createMap();
     }
 
     public function getModels()
@@ -94,9 +94,9 @@ class FieldReaderService
         return $items;
     }
 
-    public static function createMap()
+    private function createMap()
     {
-        $aliases = self::prepareAliases();
+        $aliases = $this->prepareAliases();
 
         $modelList = [];
         foreach ($aliases as $alias) {
@@ -150,7 +150,7 @@ class FieldReaderService
         return $fullList;
     }
 
-    private static function prepareAliases()
+    private function prepareAliases()
     {
         $aliases = [];
 
@@ -158,14 +158,31 @@ class FieldReaderService
         foreach ($modules as $moduleName => $module) {
             $module = Yii::$app->getModule($moduleName, false);
             if ($module) {
-                if (isset($module->modelAliases)) {
-                    foreach ($module->modelAliases as $alias) {
-                        $aliases[] =
-                            [
-                                'alias'  => $alias,
-                                'module' => $moduleName,
-                            ];
-                    }
+                $aliases = array_merge($aliases, $this->readModule($moduleName, $module));
+            }
+        }
+
+        return $aliases;
+    }
+
+    private function readModule($moduleName, $module)
+    {
+        $aliases = [];
+
+        if (isset($module->modelAliases)) {
+            foreach ($module->modelAliases as $alias) {
+                $aliases[] =
+                    [
+                        'alias'  => $alias,
+                        'module' => $moduleName,
+                    ];
+            }
+        }
+        if ($module->modules) {
+            foreach ($module->modules as $subModuleName => $subModule) {
+                $subModule = $module->getModule($subModuleName, false);
+                if ($subModule) {
+                    $aliases = array_merge($aliases, $this->readModule($subModuleName, $subModule));
                 }
             }
         }

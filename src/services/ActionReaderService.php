@@ -10,7 +10,7 @@ class ActionReaderService
 
     function __construct()
     {
-        $this->map = self::createMap();
+        $this->map = $this->createMap();
     }
 
     public function getModules()
@@ -19,6 +19,7 @@ class ActionReaderService
         foreach (array_keys($this->map) as $val) {
             $items[$val] = $val;
         }
+
         return $items;
     }
 
@@ -27,10 +28,11 @@ class ActionReaderService
         $items = [];
         foreach ($this->getModules() as $key => $val) {
             $items[$key] = [
-                'id' => $val,
+                'id'   => $val,
                 'name' => $val,
             ];
         }
+
         return $items;
     }
 
@@ -44,6 +46,7 @@ class ActionReaderService
                 }
             }
         }
+
         return $items;
     }
 
@@ -53,11 +56,12 @@ class ActionReaderService
         if ($module) {
             foreach ($this->getControllers($module) as $key => $val) {
                 $items[$key] = [
-                    'id' => $val,
+                    'id'   => $val,
                     'name' => $val,
                 ];
             }
         }
+
         return $items;
     }
 
@@ -70,8 +74,8 @@ class ActionReaderService
                     $items[$val] = $val;
                 }
             }
-
         }
+
         return $items;
     }
 
@@ -81,17 +85,18 @@ class ActionReaderService
         if ($module && $controller) {
             foreach ($this->getActions($module, $controller) as $key => $val) {
                 $items[$key] = [
-                    'id' => $val,
+                    'id'   => $val,
                     'name' => $val,
                 ];
             }
         }
+
         return $items;
     }
 
-    public static function createMap()
+    private function createMap()
     {
-        $aliases = self::prepareAliases();
+        $aliases = $this->prepareAliases();
 
         $controllerList = [];
         foreach ($aliases as $alias) {
@@ -101,8 +106,8 @@ class ActionReaderService
                 while (false !== ($file = readdir($handle))) {
                     if ($file != "." && $file != ".." && substr($file, strrpos($file, '.') - 10) == 'Controller.php') {
                         $controllerList[] = [
-                            'file' => $file,
-                            'path' => $realPath,
+                            'file'   => $file,
+                            'path'   => $realPath,
                             'module' => $alias['module'],
                         ];
                     }
@@ -142,7 +147,7 @@ class ActionReaderService
         return $fullList;
     }
 
-    public static function prepareAliases()
+    private function prepareAliases()
     {
         $aliases = [];
 
@@ -150,14 +155,30 @@ class ActionReaderService
         foreach ($modules as $moduleName => $module) {
             $module = Yii::$app->getModule($moduleName, false);
             if ($module) {
-                if (isset($module->controllerAliases)) {
-                    foreach ($module->controllerAliases as $alias) {
-                        $aliases[] =
-                            [
-                                'alias' => $alias,
-                                'module' => $moduleName,
-                            ];
-                    }
+                $aliases = array_merge($aliases, $this->readModule($moduleName, $module));
+            }
+        }
+
+        return $aliases;
+    }
+
+    private function readModule($moduleName, $module)
+    {
+        $aliases = [];
+        if (isset($module->controllerAliases)) {
+            foreach ($module->controllerAliases as $alias) {
+                $aliases[] =
+                    [
+                        'alias'  => $alias,
+                        'module' => $moduleName,
+                    ];
+            }
+        }
+        if ($module->modules) {
+            foreach ($module->modules as $subModuleName => $subModule) {
+                $subModule = $module->getModule($subModuleName, false);
+                if ($subModule) {
+                    $aliases = array_merge($aliases, $this->readModule($subModuleName, $subModule));
                 }
             }
         }
