@@ -22,6 +22,9 @@ class FieldAccessForm extends Model
     /** @var string */
     public $description;
 
+    /** @var string */
+    public $permissionsMap;
+
     /** @var array */
     public $items;
 
@@ -50,7 +53,7 @@ class FieldAccessForm extends Model
         return [
             [['modelName', 'scenarioName', 'attributeName'], 'string', 'max' => 255],
             [['description'], 'string'],
-            [['items'], 'safe'],
+            [['permissionsMap', 'items'], 'safe'],
         ];
     }
 
@@ -60,11 +63,12 @@ class FieldAccessForm extends Model
     public function attributeLabels()
     {
         return [
-            'modelName'     => Yii::t('rbac', 'Model'),
-            'scenarioName'  => Yii::t('rbac', 'Scenario'),
-            'attributeName' => Yii::t('rbac', 'Attribute'),
-            'description'   => Yii::t('rbac', 'Description'),
-            'items'         => Yii::t('rbac', 'Items'),
+            'modelName'      => Yii::t('rbac', 'Model'),
+            'scenarioName'   => Yii::t('rbac', 'Scenario'),
+            'attributeName'  => Yii::t('rbac', 'Attribute'),
+            'description'    => Yii::t('rbac', 'Description'),
+            'permissionsMap' => Yii::t('rbac', 'Permissions map'),
+            'items'          => Yii::t('rbac', 'Items'),
         ];
     }
 
@@ -87,5 +91,6 @@ class FieldAccessForm extends Model
         $this->scenarioName = $fieldAccess->scenario_name;
         $this->attributeName = $fieldAccess->attribute_name;
         $this->description = $fieldAccess->description;
+        $this->permissionsMap = $fieldAccess->permissions_map;
     }
 }

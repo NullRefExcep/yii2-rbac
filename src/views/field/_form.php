@@ -74,6 +74,11 @@ JS
             <?= $form->field($model, 'description')->textarea() ?>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
+            <?=
+            $form->field($model, 'pemissionsMap')
+                ->checkboxList(\nullref\rbac\enum\PermissionsMap::getPermissions())
+            ?>
+
             <?= $form->beginField($model, 'items') ?>
             <?= Html::activeLabel($model, 'items') ?>
             <?= FancytreeWidget::widget([

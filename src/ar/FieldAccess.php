@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $scenario_name
  * @property string $attribute_name
  * @property string $description
+ * @property string $permissions_map
  *
  * @property AuthItem[] $authItems
  */
@@ -36,6 +37,7 @@ class FieldAccess extends ActiveRecord
     {
         return [
             [['description'], 'string'],
+            [['permissions_map'], 'safe'],
             [['model_name', 'scenario_name', 'attribute_name'], 'string', 'max' => 255],
         ];
     }
@@ -46,11 +48,12 @@ class FieldAccess extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'         => Yii::t('rbac', 'ID'),
-            'model_name' => Yii::t('rbac', 'Model'),
-            'scenario_name'  => Yii::t('rbac', 'Scenario'),
-            'attribute_name' => Yii::t('rbac', 'Attribute'),
-            'description'    => Yii::t('rbac', 'Description'),
+            'id'              => Yii::t('rbac', 'ID'),
+            'model_name'      => Yii::t('rbac', 'Model'),
+            'scenario_name'   => Yii::t('rbac', 'Scenario'),
+            'attribute_name'  => Yii::t('rbac', 'Attribute'),
+            'description'     => Yii::t('rbac', 'Description'),
+            'permissions_map' => Yii::t('rbac', 'Permissions map'),
         ];
     }
 

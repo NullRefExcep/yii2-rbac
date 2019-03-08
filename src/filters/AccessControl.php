@@ -30,6 +30,9 @@ class AccessControl extends BaseAccessControl
     /** @var User|null */
     protected $userIdentity;
 
+    /** @var string  */
+    protected $loginUrl = '';
+
     public function init()
     {
         /** @var Module $module */
@@ -37,7 +40,7 @@ class AccessControl extends BaseAccessControl
         $this->userComponent = $module->userComponent;
         $this->userIdentity = $module->getUserIdentity();
 
-        $loginUrl = $module->loginUrl;
+        $this->loginUrl = $module->loginUrl;
 
         $this->actionAccessRepository = Yii::$container->get(ActionAccessRepositoryInterface::class);
 
@@ -48,27 +51,12 @@ class AccessControl extends BaseAccessControl
         $action = $controllerClass->action->id;
         $this->rules = $this->getRules($controllerModule, $controller, $action);
 
-        /**
-         * @param $rule AccessRule|null
-         * @param $action ErrorAction|InlineAction
-         *
-         * @return Response
-         */
-        $this->denyCallback = function ($rule, $action) use ($loginUrl) {
-            $controller = $action->controller;
-            if ($this->userComponent->isGuest) {
-                return $controller->redirect($loginUrl);
-            }
-            Yii::$app->session->setFlash('warning', Yii::t('rbac', 'You don\'t have permission to')
-                . ' ' . Yii::t('rbac', 'do this action'));
-
-            return $controller->redirect(Yii::$app->request->referrer ?? Yii::$app->getHomeUrl());
-        };
+        $this->setDenyCallBack();
 
         parent::init();
     }
 
-    public function getRules($module, $controller, $action)
+    protected function getRules($module, $controller, $action)
     {
         $rules = $this->rules;
         $identity = $this->userIdentity;
@@ -152,5 +140,25 @@ class AccessControl extends BaseAccessControl
         }
 
         return $rules;
+    }
+
+    protected function setDenyCallBack()
+    {
+        /**
+         * @param $rule AccessRule|null
+         * @param $action ErrorAction|InlineAction
+         *
+         * @return Response
+         */
+        $this->denyCallback = function ($rule, $action) {
+            $controller = $action->controller;
+            if ($this->userComponent->isGuest) {
+                return $controller->redirect($this->loginUrl);
+            }
+            Yii::$app->session->setFlash('warning', Yii::t('rbac', 'You don\'t have permission to')
+                . ' ' . Yii::t('rbac', 'do this action'));
+
+            return $controller->redirect(Yii::$app->request->referrer ?? Yii::$app->getHomeUrl());
+        };
     }
 }

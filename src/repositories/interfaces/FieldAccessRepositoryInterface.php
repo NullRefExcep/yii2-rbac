@@ -15,5 +15,7 @@ interface FieldAccessRepositoryInterface
 
     public function findItemsForScenario($model, $scenario);
 
+    public function saveWithItems(FieldAccessForm $form);
+
     public function updateWithItems(FieldAccessForm $form, FieldAccess $elementAccess);
 }
