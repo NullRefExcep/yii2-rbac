@@ -40,7 +40,6 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
 
     /** @var array */
     public $modelAliases = [
-        '@nullref/rbac/ar',
         '@nullref/rbac/form',
     ];
 

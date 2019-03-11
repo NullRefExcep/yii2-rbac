@@ -2,6 +2,7 @@
 
 namespace nullref\rbac\ar;
 
+use nullref\useful\behaviors\JsonBehavior;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -20,6 +21,16 @@ use yii\db\ActiveRecord;
  */
 class FieldAccess extends ActiveRecord
 {
+    public function behaviors()
+    {
+        return [
+            'json'     => [
+                'class'  => JsonBehavior::class,
+                'fields' => ['permissions_map'],
+            ],
+        ];
+    }
+
     public $items;
 
     /**

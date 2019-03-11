@@ -18,6 +18,12 @@ class FieldCheckerBehavior extends Behavior
     /** @var FieldAccessRepositoryInterface */
     private $fieldAccessRepository;
 
+    /** @var Model */
+    private $currentModel;
+
+    /** @var array */
+    private $attributeItems = [];
+
     /** @var User|null */
     private $userIdentity;
 
@@ -43,6 +49,12 @@ class FieldCheckerBehavior extends Behavior
      */
     public function events()
     {
+        /** @var Model $currentModel */
+        $currentModel = $this->owner;
+        $this->currentModel = $currentModel;
+        $this->attributeItems = $this->fieldAccessRepository
+            ->findItemsForScenario(get_class($currentModel), $currentModel->scenario);
+
         return [
             Model::EVENT_BEFORE_VALIDATE => 'checkFields',
         ];
@@ -50,35 +62,34 @@ class FieldCheckerBehavior extends Behavior
 
     public function checkFields()
     {
-        $identity = $this->userIdentity;
-        if ($identity) {
-            $userId = $identity->getId();
-            /** @var Model $currentModel */
-            $currentModel = $this->owner;
-            /** @var array $attributesItems */
-            $attributesItems = $this->fieldAccessRepository->findItemsForScenario(get_class($currentModel), $currentModel->scenario);
-            if ($attributesItems) {
-                foreach ($attributesItems as $attributeName => $attributeItems) {
-                    if ($currentModel->isAttributeChanged($attributeName)) {
-                        $allowed = false;
-                        foreach ($attributeItems as $item) {
+        /** @var array $attributesItems */
+        $attributesItems = $this->attributeItems;
+
+        if ($attributesItems) {
+            foreach ($attributesItems as $attributeName => $attributeItems) {
+                if ($this->currentModel->isAttributeChanged($attributeName)) {
+                    $allowed = false;
+                    foreach ($attributeItems as $item) {
+                        $identity = $this->userIdentity;
+                        if ($identity) {
+                            $userId = $identity->getId();
                             if ($this->manager->checkAccess($userId, $item)) {
                                 $allowed = true;
                                 break;
                             }
                         }
-                        if (!$allowed) {
-                            $currentModel->addError(
-                                $attributeName,
-                                Yii::t(
-                                    'rbac',
-                                    'You are not allowed to work with attribute "{attribute}"',
-                                    [
-                                        'attribute' => $attributeName,
-                                    ]
-                                )
-                            );
-                        }
+                    }
+                    if (!$allowed) {
+                        $this->currentModel->addError(
+                            $attributeName,
+                            Yii::t(
+                                'rbac',
+                                'You are not allowed to work with attribute "{attribute}"',
+                                [
+                                    'attribute' => $attributeName,
+                                ]
+                            )
+                        );
                     }
                 }
             }

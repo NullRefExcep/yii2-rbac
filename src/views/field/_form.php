@@ -2,6 +2,7 @@
 
 use kartik\depdrop\DepDrop;
 use nullref\rbac\assets\FancyTreeAsset;
+use nullref\rbac\enum\PermissionsMap;
 use nullref\rbac\forms\FieldAccessForm;
 use wbraganca\fancytree\FancytreeWidget;
 use yii\helpers\Html;
@@ -75,8 +76,8 @@ JS
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
             <?=
-            $form->field($model, 'pemissionsMap')
-                ->checkboxList(\nullref\rbac\enum\PermissionsMap::getPermissions())
+            $form->field($model, 'permissionsMap')
+                ->checkboxList(PermissionsMap::getPermissions())
             ?>
 
             <?= $form->beginField($model, 'items') ?>

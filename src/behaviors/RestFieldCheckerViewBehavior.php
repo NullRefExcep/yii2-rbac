@@ -12,7 +12,7 @@ use yii\base\Model;
 use yii\db\BaseActiveRecord;
 use yii\web\User;
 
-class FieldCheckerAdvancedBehavior extends Behavior
+class RestFieldCheckerViewBehavior extends Behavior
 {
     /** @var DBManager */
     private $manager;
@@ -36,6 +36,7 @@ class FieldCheckerAdvancedBehavior extends Behavior
     )
     {
         $this->manager = $manager;
+
         $this->fieldAccessRepository = $fieldAccessRepository;
 
         /** @var Module $module */
@@ -51,7 +52,6 @@ class FieldCheckerAdvancedBehavior extends Behavior
      */
     public function events()
     {
-
         /** @var Model $currentModel */
         $currentModel = $this->owner;
         $this->currentModel = $currentModel;
@@ -59,27 +59,23 @@ class FieldCheckerAdvancedBehavior extends Behavior
             ->findItemsForScenario(get_class($currentModel), $currentModel->scenario);
 
         return [
-            BaseActiveRecord::EVENT_BEFORE_INSERT => 'checkFieldsForCreate',
-            BaseActiveRecord::EVENT_AFTER_FIND    => 'checkFieldsForView',
-            BaseActiveRecord::EVENT_BEFORE_UPDATE => 'checkFieldsForUpdate',
-            BaseActiveRecord::EVENT_BEFORE_DELETE => 'checkFieldsForDelete',
+            BaseActiveRecord::EVENT_AFTER_FIND => 'checkFieldsForView',
         ];
-    }
-
-    public function checkFieldForCreate()
-    {
-
     }
 
     public function checkFieldsForView()
     {
+        if (!isset($this->currentModel->filteredFields)) {
+            return true;
+        }
+
         $attributesMap = [];
 
         /** @var array $attributesItems */
         $attributesItems = $this->attributeItems;
         $identity = $this->userIdentity;
 
-        if ($attributesItems) {
+        if ($this->attributeItems) {
             foreach ($attributesItems as $attributeName => $attributeItems) {
                 foreach ($attributeItems as $item) {
                     if (!in_array($attributeName, $attributesMap)) {
@@ -99,18 +95,8 @@ class FieldCheckerAdvancedBehavior extends Behavior
 
         foreach ($attributesMap as $attributeName => $attribute) {
             if (!$attribute) {
-                unset($this->currentModel->$attributeName);
+                $this->owner->filteredFields[] = $attributeName;
             }
         }
-    }
-
-    public function checkFieldsForUpdate()
-    {
-
-    }
-
-    public function checkFieldsForDelete()
-    {
-
     }
 }

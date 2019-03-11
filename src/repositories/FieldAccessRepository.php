@@ -54,8 +54,8 @@ class FieldAccessRepository extends AbstractRepository implements FieldAccessRep
         return $this->ar::find()
             ->with(['authItems'])
             ->where([
-                'model_name'     => $model,
-                'scenario_name'  => $scenario,
+                'model_name'    => $model,
+                'scenario_name' => $scenario,
             ])
             ->asArray()
             ->all();
@@ -71,7 +71,8 @@ class FieldAccessRepository extends AbstractRepository implements FieldAccessRep
         return [];
     }
 
-    public function findItemsForScenario($model, $scenario) {
+    public function findItemsForScenario($model, $scenario)
+    {
         $scenarioFields = $this->findByMSAsArray($model, $scenario);
         if ($scenarioFields) {
             $items = [];
@@ -123,10 +124,11 @@ class FieldAccessRepository extends AbstractRepository implements FieldAccessRep
     public function saveWithItems(FieldAccessForm $form)
     {
         $fieldAccess = new FieldAccess([
-            'model_name'     => $form->modelName,
-            'scenario_name'  => $form->scenarioName,
-            'attribute_name' => $form->attributeName,
-            'description'    => $form->description,
+            'model_name'      => $form->modelName,
+            'scenario_name'   => $form->scenarioName,
+            'attribute_name'  => $form->attributeName,
+            'description'     => $form->description,
+            'permissions_map' => $form->permissionsMap,
         ]);
         if ($this->save($fieldAccess)) {
             $this->assignItems($fieldAccess->id, $form->items);
@@ -143,6 +145,7 @@ class FieldAccessRepository extends AbstractRepository implements FieldAccessRep
         $fieldAccess->scenario_name = $form->scenarioName;
         $fieldAccess->attribute_name = $form->attributeName;
         $fieldAccess->description = $form->description;
+        $fieldAccess->permissions_map = $form->permissionsMap;
         if ($this->save($fieldAccess)) {
             $this->assignItems($fieldAccess->id, $form->items);
 
