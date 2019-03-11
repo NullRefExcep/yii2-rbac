@@ -83,6 +83,20 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
         return $items;
     }
 
+    public function findItemsForScenarioWithPermissions($model, $scenario)
+    {
+        $ar = $this->repository->getAr();
+        $items = $ar::getDb()->cache(
+            function () use ($model, $scenario) {
+                return $this->repository->findItemsForScenarioWithPermissions($model, $scenario);
+            },
+            null,
+            new TagDependency(['tags' => $model . '-' . $scenario . '-scenario-field-items'])
+        );
+
+        return $items;
+    }
+
     public function saveWithItems(FieldAccessForm $form)
     {
         $result = $this->repository->saveWithItems($form);
@@ -126,7 +140,7 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
             $this->invalidate($fieldAccess->id . '-field');
             $this->invalidate(
                 $fieldAccess->model_name . '-' .
-                $fieldAccess->scenario_name . '-' . '-scenario-field-items'
+                $fieldAccess->scenario_name . '-scenario-field-items'
             );
         }
 
@@ -151,7 +165,7 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
             $this->invalidate($model->id . '-field');
             $this->invalidate(
                 $model->model_name . '-' .
-                $model->scenario_name . '-' . '-scenario-field-items'
+                $model->scenario_name . '-scenario-field-items'
             );
         }
         $this->repository->delete($condition);

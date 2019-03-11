@@ -90,6 +90,28 @@ class FieldAccessRepository extends AbstractRepository implements FieldAccessRep
         return [];
     }
 
+    public function findItemsForScenarioWithPermissions($model, $scenario)
+    {
+        $scenarioFields = $this->findByMSAsArray($model, $scenario);
+        if ($scenarioFields) {
+            $items = [];
+            foreach ($scenarioFields as $scenarioField) {
+                if (!array_key_exists($scenarioField['attribute_name'], $items)) {
+                    $items[$scenarioField['attribute_name']] = [];
+                }
+                $authItemNames = ArrayHelper::getColumn($scenarioField['authItems'], 'name');
+                $items[$scenarioField['attribute_name']] = [
+                    'items' => $authItemNames,
+                    'permissions' => $scenarioField['permissions_map']
+                ];
+            }
+
+            return $items;
+        }
+
+        return [];
+    }
+
     public function assignItems($fieldId, $items)
     {
         if (!is_array($items)) {

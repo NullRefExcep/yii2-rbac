@@ -56,7 +56,7 @@ class FieldCheckerAdvancedBehavior extends Behavior
         $currentModel = $this->owner;
         $this->currentModel = $currentModel;
         $this->attributeItems = $this->fieldAccessRepository
-            ->findItemsForScenario(get_class($currentModel), $currentModel->scenario);
+            ->findItemsForScenarioWithPermissions(get_class($currentModel), $currentModel->scenario);
 
         return [
             BaseActiveRecord::EVENT_BEFORE_INSERT => 'checkFieldsForCreate',
@@ -80,16 +80,17 @@ class FieldCheckerAdvancedBehavior extends Behavior
         $identity = $this->userIdentity;
 
         if ($attributesItems) {
-            foreach ($attributesItems as $attributeName => $attributeItems) {
-                foreach ($attributeItems as $item) {
+            foreach ($attributesItems as $attributeName => $attributeSetting) {
+                $permissions = json_decode($attributeSetting['permissions']);
+                foreach ($attributeSetting['items'] as $item) {
                     if (!in_array($attributeName, $attributesMap)) {
                         $attributesMap[$attributeName] = false;
                     }
                     if ($identity) {
                         $userId = $identity->getId();
                         if ($this->manager->checkAccess($userId, $item)) {
-                            $attributesMap[$attributeName] = $attributesMap[$attributeName] &&
-                                $item->permission_map[PermissionsMap::PERMISSION_VIEW];
+                            $attributesMap[$attributeName] = $attributesMap[$attributeName] ||
+                                in_array(PermissionsMap::PERMISSION_VIEW, $permissions);
                             break;
                         }
                     }

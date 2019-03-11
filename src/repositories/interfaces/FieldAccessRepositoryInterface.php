@@ -8,12 +8,14 @@ use nullref\rbac\forms\FieldAccessForm;
 interface FieldAccessRepositoryInterface
 {
     public function findOneWithAuthItems($id);
-    
+
     public function findOneByMSA($model, $scenario, $attribute);
-    
+
     public function findItems($model, $scenario, $attribute);
 
     public function findItemsForScenario($model, $scenario);
+
+    public function findItemsForScenarioWithPermissions($model, $scenario);
 
     public function saveWithItems(FieldAccessForm $form);
 
