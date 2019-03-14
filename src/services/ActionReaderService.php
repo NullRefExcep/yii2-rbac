@@ -123,20 +123,26 @@ class ActionReaderService
                 while (($line = fgets($handle)) !== false) {
                     if (preg_match('/public function action(.*?)\(/', $line, $display)) {
                         if (strlen($display[1]) > 2) {
-                            $name = substr($controller['file'], 0, -14);
-                            $matches = [];
-                            preg_match_all('/[A-Z]/', $name, $matches, PREG_OFFSET_CAPTURE);
-                            if (isset($matches[0])) {
-                                $matches = $matches[0];
-                                $length = count($matches);
-                                if ($length > 1) {
-                                    for ($i = 1; $i < $length; $i++) {
-                                        $name = substr($name, 0, $matches[$i][1]) . '-' . substr($name, $matches[$i][1]);
-                                    }
-                                }
-                            }
-                            $name = strtolower($name);
-                            $fullList[$controller['module']][$name][] = strtolower($display[1]);
+                            $controllerName = substr($controller['file'], 0, -14);
+                            $controllerPieces = preg_split(
+                                '/(?=[A-Z])/',
+                                $controllerName,
+                                -1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
+                            $controllerSeparatedName = implode('-', $controllerPieces);
+                            $controllerName = strtolower($controllerSeparatedName);
+
+                            $actionPecies = preg_split(
+                                '/(?=[A-Z])/',
+                                $display[1],
+                                -1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
+                            $actionSeparatedName = implode('-', $actionPecies);
+                            $actionName = strtolower($actionSeparatedName);
+
+                            $fullList[$controller['module']][$controllerName][] = strtolower($actionName);
                         }
                     }
                 }
