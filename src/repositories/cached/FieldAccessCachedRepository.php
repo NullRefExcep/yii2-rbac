@@ -114,7 +114,7 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
             );
             $this->invalidate(
                 $form->modelName . '-' .
-                $form->scenarioName . '-' . '-scenario-field-items'
+                $form->scenarioName . '-scenario-field-items'
             );
         }
 
