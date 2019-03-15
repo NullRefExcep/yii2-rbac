@@ -33,7 +33,7 @@ class AccessControl extends BaseAccessControl
     /** @var string  */
     protected $loginUrl = '';
 
-    public function init()
+    public function beforeFilter($event)
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('rbac');
@@ -50,10 +50,15 @@ class AccessControl extends BaseAccessControl
         $controller = $controllerClass->id;
         $action = $controllerClass->action->id;
         $this->rules = $this->getRules($controllerModule, $controller, $action);
+        foreach ($this->rules as $i => $rule) {
+            if (is_array($rule)) {
+                $this->rules[$i] = Yii::createObject(array_merge($this->ruleConfig, $rule));
+            }
+        }
 
         $this->setDenyCallBack();
 
-        parent::init();
+        return parent::beforeFilter($event);
     }
 
     protected function getRules($module, $controller, $action)
