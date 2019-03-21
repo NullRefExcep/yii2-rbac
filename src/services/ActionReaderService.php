@@ -121,8 +121,8 @@ class ActionReaderService
                             );
                             $controllerSeparatedName = implode('-', $controllerPieces);
                             $controllerName = strtolower($controllerSeparatedName);
-                            $controllerName = $controller['dirPath'] . '-' . $controllerName;
-                            $controllerName = trim($controllerName, '-');
+                            $controllerName = $controller['dirPath'] . '/' . $controllerName;
+                            $controllerName = trim($controllerName, '-/');
 
                             $actionPecies = preg_split(
                                 '/(?=[A-Z])/',
