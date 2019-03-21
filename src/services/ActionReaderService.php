@@ -102,18 +102,7 @@ class ActionReaderService
         foreach ($aliases as $alias) {
             $dirPath = Yii::getAlias($alias['alias']);
             $realPath = realpath($dirPath);
-            if ($realPath && $handle = opendir($realPath)) {
-                while (false !== ($file = readdir($handle))) {
-                    if ($file != "." && $file != ".." && substr($file, strrpos($file, '.') - 10) == 'Controller.php') {
-                        $controllerList[] = [
-                            'file'   => $file,
-                            'path'   => $realPath,
-                            'module' => $alias['module'],
-                        ];
-                    }
-                }
-                closedir($handle);
-            }
+            $controllerList = array_merge($controllerList, $this->readDir($realPath, $alias['module']));
         }
         asort($controllerList);
         $fullList = [];
@@ -132,6 +121,8 @@ class ActionReaderService
                             );
                             $controllerSeparatedName = implode('-', $controllerPieces);
                             $controllerName = strtolower($controllerSeparatedName);
+                            $controllerName = $controller['dirPath'] . '-' . $controllerName;
+                            $controllerName = trim($controllerName, '-');
 
                             $actionPecies = preg_split(
                                 '/(?=[A-Z])/',
@@ -151,6 +142,35 @@ class ActionReaderService
         }
 
         return $fullList;
+    }
+
+    private function readDir($realPath, $module, $dirName = '')
+    {
+        $controllerList = [];
+
+        if ($realPath && $handle = opendir($realPath)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != "..") {
+                    $newRealPath = $realPath . '/' . $file;
+                    if (is_dir($realPath . '/' . $file)) {
+                        $dirName .= basename($file) . '-';
+                        $controllerList = array_merge($controllerList, $this->readDir($newRealPath, $module, $dirName));
+                        $dirName = '';
+                    }
+                    if (substr($file, strrpos($file, '.') - 10) === 'Controller.php') {
+                        $controllerList[] = [
+                            'file'    => $file,
+                            'path'    => $realPath,
+                            'dirPath' => trim($dirName, '-'),
+                            'module'  => $module,
+                        ];
+                    }
+                }
+            }
+            closedir($handle);
+        }
+
+        return $controllerList;
     }
 
     private function prepareAliases()
