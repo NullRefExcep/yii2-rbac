@@ -2,12 +2,11 @@
 
 namespace nullref\rbac\components;
 
-use nullref\core\interfaces\IAdminController;
 use nullref\rbac\filters\RestAccessControl;
 use yii\helpers\ArrayHelper;
 use yii\rest\Controller;
 
-class BaseRestController extends Controller implements IAdminController
+class BaseRestController extends Controller
 {
     public function behaviors()
     {
