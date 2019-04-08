@@ -9,6 +9,7 @@ use nullref\rbac\interfaces\UserProviderInterface;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\base\Module as BaseModule;
+use yii\db\ActiveRecord;
 use yii\web\User as UserComponent;
 
 /**
@@ -52,7 +53,7 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
     /** @var array */
     public $defaultClassMap = [];
 
-    /** @var UserComponent|null */
+    /** @var UserComponent|ActiveRecord|null */
     private $userIdentity;
 
     /**
@@ -60,6 +61,10 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
      */
     public function getUserIdentity()
     {
+        if (!$this->userIdentity && $this->userComponent instanceof UserComponent) {
+            $this->userIdentity = $this->userComponent->getIdentity();
+        }
+
         return $this->userIdentity;
     }
 
