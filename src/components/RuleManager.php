@@ -13,7 +13,7 @@ class RuleManager extends Component implements RuleManagerInterface
     {
         return [
             AdminAffiliationRule::class => 'AdminAffiliationRule',
-         UserAffiliationRule::class => 'UserAffiliationRule',
+            UserAffiliationRule::class  => 'UserAffiliationRule',
         ];
     }
 }

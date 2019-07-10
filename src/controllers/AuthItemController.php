@@ -5,6 +5,7 @@ namespace nullref\rbac\controllers;
 use nullref\rbac\ar\AuthItemChild;
 use nullref\rbac\components\BaseController;
 use nullref\rbac\repositories\AuthItemChildRepository;
+use nullref\rbac\repositories\AuthItemRepository;
 use nullref\rbac\services\AuthTreeService;
 use Yii;
 
