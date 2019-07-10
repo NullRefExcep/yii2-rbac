@@ -5,6 +5,7 @@ namespace nullref\rbac\services;
 use nullref\rbac\ar\AuthItem;
 use nullref\rbac\ar\AuthItemChild;
 use nullref\rbac\helpers\AuthNode;
+use yii\rbac\Item;
 
 class AuthTreeService
 {
@@ -17,12 +18,22 @@ class AuthTreeService
         if ($childrenAmount > 0) {
             foreach ($children as $child) {
                 $childItem = $child->getItem();
+                $children = $this->getArrayAuthTree($child);
+                usort($children, function ($node1, $node2) {
+                    $type1 = $node1['type'];
+                    $type2 = $node2['type'];
+                    if ($type1 === $type2) {
+                        return strcmp($node1['name'], $node2['name']);
+                    } else {
+                        return ($node1['type'] === Item::TYPE_ROLE) ? false : true;
+                    }
+                });
                 $arrayTree[$childItem->name] = [
                     'name'        => $childItem->name,
                     'description' => $childItem->description,
                     'type'        => $childItem->type,
                     'rule'        => $childItem->rule_name,
-                    'children'    => $this->getArrayAuthTree($child),
+                    'children'    => $children,
                 ];
             }
         }
@@ -84,11 +95,9 @@ class AuthTreeService
     {
         /** @var AuthItem[] $items */
         $items = AuthItem::find()
-            ->indexBy('name')
             ->all();
 
         $children = AuthItemChild::find()
-            ->indexBy('child')
             ->all();
 
         $pool = [];
@@ -98,7 +107,8 @@ class AuthTreeService
             $pool[$item->name] = $authNode;
         }
 
-        foreach ($children as $childName => $child) {
+        foreach ($children as $child) {
+            $childName = $child->child;
             $parentNode = isset($pool[$child->parent]) ? $pool[$child->parent] : null;
             $childNode = isset($pool[$childName]) ? $pool[$childName] : null;
             if ($parentNode && $childNode) {

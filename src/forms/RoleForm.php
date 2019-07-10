@@ -57,7 +57,7 @@ class RoleForm extends ItemForm
      */
     public function getUnassignedItems()
     {
-        return $this->authItemRepository->getUnassignedItems($this->item, Item::TYPE_ROLE);
+        return $this->authItemRepository->getUnassignedItems($this->item);
     }
 
     /**
