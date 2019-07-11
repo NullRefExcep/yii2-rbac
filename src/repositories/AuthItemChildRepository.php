@@ -14,7 +14,7 @@ class AuthItemChildRepository extends AbstractRepository
 
     public function addParent($name, $parentName)
     {
-        $relation = new $this->authItemChildRepository->ar();
+        $relation = new $this->ar();
         $relation->parent = $parentName;
         $relation->child = $name;
 

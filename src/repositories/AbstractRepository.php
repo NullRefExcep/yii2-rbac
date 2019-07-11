@@ -67,20 +67,30 @@ abstract class AbstractRepository
     }
 
     /**
-     * @return ActiveRecord
+     * @param $model ActiveRecord|array
+     *
+     * @return ActiveRecord|null
      */
     public function save($model)
     {
         if ($model instanceof ActiveRecord) {
-            return $model->save();
+            $saveResult = $model->save();
+            if ($saveResult) {
+                $entity = $model;
+            }
         } elseif (is_array($model)) {
             $instance = new $this->ar();
             $instance->load($model);
 
-            return $instance->save();
+            $saveResult = $instance->save();
+            if ($saveResult) {
+                $entity = $instance;
+            }
         } else {
-            return false;
+            $entity = null;
         }
+
+        return $entity;
     }
 
     /**
