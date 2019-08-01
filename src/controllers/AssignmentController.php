@@ -8,10 +8,10 @@ use nullref\rbac\forms\AssignmentForm;
 use nullref\rbac\helpers\UserColumns;
 use nullref\rbac\helpers\UserFilter;
 use nullref\rbac\repositories\interfaces\AuthAssignmentRepositoryInterface;
+use nullref\rbac\search\AssignmentSearch;
 use nullref\rbac\services\AuthTreeService;
 use Yii;
 use yii\helpers\Url;
-use yii\data\ArrayDataProvider;
 
 class AssignmentController extends BaseController
 {
@@ -47,16 +47,17 @@ class AssignmentController extends BaseController
 
     public function actionIndex()
     {
-        $dataProvider = new ArrayDataProvider([
-            'allModels'  => $this->users,
-            'pagination' => [
-                'pageSize' => 100,
-            ],
-        ]);
         $columns = Yii::createObject(UserColumns::class, [$this->users])->getColumns();
+
+        $searchModel = new AssignmentSearch();
+        $searchModel->setColumns($columns);
+        $searchModel->setUsers($this->users);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $columns = $searchModel->processColumns($columns);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
             'columns'      => $columns,
         ]);
     }

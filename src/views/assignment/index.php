@@ -1,5 +1,6 @@
 <?php
 
+use nullref\rbac\search\AssignmentSearch;
 use rmrevin\yii\fontawesome\FA;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
@@ -10,6 +11,7 @@ use yii\widgets\Pjax;
 /**
  * @var $this View
  * @var $dataProvider ArrayDataProvider
+ * @var $searchModel AssignmentSearch
  * @var $columns array
  */
 
@@ -30,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="table-responsive">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
+            'filterModel'  => $searchModel,
             'columns'      => array_merge(
                 [['class' => 'yii\grid\SerialColumn']],
                 $columns,
