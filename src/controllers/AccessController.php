@@ -7,13 +7,13 @@ use nullref\rbac\components\BaseController;
 use nullref\rbac\filters\AccessControl;
 use nullref\rbac\forms\ActionAccessAssignForm;
 use nullref\rbac\forms\ActionAccessForm;
-use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
 use nullref\rbac\repositories\AuthItemRepository;
+use nullref\rbac\repositories\interfaces\ActionAccessRepositoryInterface;
+use nullref\rbac\search\ActionAccessSearch;
 use nullref\rbac\services\ActionAccessService;
 use nullref\rbac\services\ActionReaderService;
 use nullref\rbac\services\AuthTreeService;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
@@ -121,12 +121,14 @@ class AccessController extends BaseController
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => ActionAccess::find(),
-        ]);
+        $searchModel = new ActionAccessSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $modules = (new ActionReaderService())->getModules();
 
         return $this->render('index', [
+            'searchModel'  => $searchModel,
             'dataProvider' => $dataProvider,
+            'modules'      => $modules,
         ]);
     }
 

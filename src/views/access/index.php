@@ -3,8 +3,12 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/**
+ * @var $this yii\web\View
+ * @var $searchModel \nullref\rbac\search\ActionAccessSearch
+ * @var $dataProvider yii\data\ActiveDataProvider
+ * @var $modules array
+ */
 
 $this->title = Yii::t('rbac', 'Action Accesses');
 $this->params['breadcrumbs'][] = $this->title;
@@ -24,13 +28,19 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('rbac', 'Create Action Access'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
+    <?php \yii\widgets\Pjax::begin() ?>
+
     <div class="table-responsive">
         <?= GridView::widget([
+            'filterModel'  => $searchModel,
             'dataProvider' => $dataProvider,
             'columns'      => [
                 ['class' => 'yii\grid\SerialColumn'],
 
-                'module',
+                [
+                    'attribute' => 'module',
+                    'filter'    => $modules,
+                ],
                 'controller',
                 'action',
 
@@ -41,4 +51,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]); ?>
     </div>
+
+    <?php \yii\widgets\Pjax::end() ?>
 </div>
