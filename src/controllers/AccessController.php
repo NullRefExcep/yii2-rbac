@@ -91,12 +91,12 @@ class AccessController extends BaseController
             if ($parents != null) {
                 $module = $parents[0];
                 $out = $this->actionReader->getControllersJs($module);
-                echo Json::encode(['output' => $out, 'selected' => $selected]);
 
-                return;
+                return Json::encode(['output' => $out, 'selected' => $selected]);
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+
+        return Json::encode(['output' => '', 'selected' => '']);
     }
 
     public function actionActions($selected = '')
@@ -107,12 +107,12 @@ class AccessController extends BaseController
                 $module = $parents[0];
                 $controller = $parents[1];
                 $out = $this->actionReader->getActionsJs($module, $controller);
-                echo Json::encode(['output' => $out, 'selected' => $selected]);
 
-                return;
+                return Json::encode(['output' => $out, 'selected' => $selected]);
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+
+        return Json::encode(['output' => '', 'selected' => '']);
     }
 
     /**

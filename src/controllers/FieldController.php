@@ -86,12 +86,12 @@ class FieldController extends BaseController
             if ($parents != null) {
                 $model = $parents[0];
                 $out = $this->fieldReader->getScenariosJs($model);
-                echo Json::encode(['output' => $out, 'selected' => $selected]);
 
-                return;
+                return Json::encode(['output' => $out, 'selected' => $selected]);
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+
+        return Json::encode(['output' => '', 'selected' => '']);
     }
 
     public function actionAttributes($selected = '')
@@ -102,12 +102,12 @@ class FieldController extends BaseController
                 $model = $parents[0];
                 $scenario = $parents[1];
                 $out = $this->fieldReader->getAttributesJs($model, $scenario);
-                echo Json::encode(['output' => $out, 'selected' => $selected]);
 
-                return;
+                return Json::encode(['output' => $out, 'selected' => $selected]);
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+
+        return Json::encode(['output' => '', 'selected' => '']);
     }
 
     /**
