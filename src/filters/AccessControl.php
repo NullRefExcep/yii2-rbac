@@ -106,11 +106,23 @@ class AccessControl extends BaseAccessControl
                 $isEdited = false;
                 if (!empty($newRule)) {
                     foreach ($rules as $key => $rule) {
-                        if (in_array($action, $rule['actions']) && $rule['allow']) {
-                            if (count($rule['actions']) == 1) {
-                                $isEdited = true;
+                        if ($rule instanceof AccessRule) {
+                            $ruleActions = ($rule->actions) ? $rule->actions : [];
+                            if (in_array($action, $ruleActions) && $rule->allow) {
+                                if (count($ruleActions) == 1) {
+                                    $isEdited = true;
+                                }
+                                $ruleRoles = ($rule->roles) ? $rule->roles : [];
+                                $rule->roles = ArrayHelper::merge($ruleRoles, $roles);
+                                $rules[$key] = $rule;
                             }
-                            $rules[$key]['roles'] = ArrayHelper::merge($rules[$key]['roles'], $roles);
+                        } else {
+                            if (in_array($action, $rule['actions']) && $rule['allow']) {
+                                if (count($rule['actions']) == 1) {
+                                    $isEdited = true;
+                                }
+                                $rules[$key]['roles'] = ArrayHelper::merge($rules[$key]['roles'], $roles);
+                            }
                         }
                     }
                 }
