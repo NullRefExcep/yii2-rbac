@@ -68,12 +68,9 @@ class ActionAccessCachedRepository extends AbstractCachedRepository implements A
 
     public function updateWithItems(ActionAccessForm $form, ActionAccess $actionAccess)
     {
+        $this->invalidate($actionAccess->module . '-' . $actionAccess->controller . '-' . $actionAccess->action . '-action');
+        $this->invalidate($actionAccess->id . '-action');
         $result = $this->repository->updateWithItems($form, $actionAccess);
-
-        if ($result) {
-            $this->invalidate($form->module . '-' . $form->controller . '-' . $form->action . '-action');
-            $this->invalidate($actionAccess->id . '-action');
-        }
 
         return $result;
     }

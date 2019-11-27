@@ -123,26 +123,23 @@ class FieldAccessCachedRepository extends AbstractCachedRepository implements Fi
 
     public function updateWithItems(FieldAccessForm $form, FieldAccess $fieldAccess)
     {
+        $this->invalidate(
+            $fieldAccess->model_name . '-' .
+            $fieldAccess->scenario_name . '-' .
+            $fieldAccess->attribute_name . '-field-items'
+        );
+        $this->invalidate($fieldAccess->id . '-field-items');
+        $this->invalidate(
+            $fieldAccess->model_name . '-' .
+            $fieldAccess->scenario_name . '-' .
+            $fieldAccess->attribute_name . '-field'
+        );
+        $this->invalidate($fieldAccess->id . '-field');
+        $this->invalidate(
+            $fieldAccess->model_name . '-' .
+            $fieldAccess->scenario_name . '-scenario-field-items'
+        );
         $result = $this->repository->updateWithItems($form, $fieldAccess);
-
-        if ($result) {
-            $this->invalidate(
-                $fieldAccess->model_name . '-' .
-                $fieldAccess->scenario_name . '-' .
-                $fieldAccess->attribute_name . '-field-items'
-            );
-            $this->invalidate($fieldAccess->id . '-field-items');
-            $this->invalidate(
-                $fieldAccess->model_name . '-' .
-                $fieldAccess->scenario_name . '-' .
-                $fieldAccess->attribute_name . '-field'
-            );
-            $this->invalidate($fieldAccess->id . '-field');
-            $this->invalidate(
-                $fieldAccess->model_name . '-' .
-                $fieldAccess->scenario_name . '-scenario-field-items'
-            );
-        }
 
         return $result;
     }
