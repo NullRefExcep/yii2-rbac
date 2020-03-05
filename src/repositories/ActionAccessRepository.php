@@ -16,14 +16,14 @@ class ActionAccessRepository extends AbstractRepository implements ActionAccessR
      * ActionAccessRepository constructor.
      *
      * @param $activeRecord string
-     * @param $actionAccrssItemRepository ActionAccessItemRepository
+     * @param $actionAccessItemRepository ActionAccessItemRepository
      */
     public function __construct(
-        ActionAccessItemRepository $actionAccrssItemRepository,
+        ActionAccessItemRepository $actionAccessItemRepository,
         $activeRecord
     )
     {
-        $this->aaiRepository = $actionAccrssItemRepository;
+        $this->aaiRepository = $actionAccessItemRepository;
 
         parent::__construct($activeRecord);
     }

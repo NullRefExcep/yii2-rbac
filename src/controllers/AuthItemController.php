@@ -4,8 +4,7 @@ namespace nullref\rbac\controllers;
 
 use nullref\rbac\ar\AuthItemChild;
 use nullref\rbac\components\BaseController;
-use nullref\rbac\repositories\AuthItemChildRepository;
-use nullref\rbac\repositories\AuthItemRepository;
+use nullref\rbac\repositories\interfaces\AuthItemChildRepositoryInterface;
 use nullref\rbac\services\AuthTreeService;
 use Yii;
 
@@ -14,7 +13,7 @@ class AuthItemController extends BaseController
     /** @var AuthTreeService */
     private $authTree;
 
-    /** @var AuthItemRepository */
+    /** @var AuthItemChildRepositoryInterface */
     private $aicRepository;
 
     public function __construct(
@@ -22,7 +21,7 @@ class AuthItemController extends BaseController
         $module,
         $config = [],
         AuthTreeService $authTree,
-        AuthItemChildRepository $aicRepository
+        AuthItemChildRepositoryInterface $aicRepository
     )
     {
         $this->authTree = $authTree;
@@ -47,7 +46,7 @@ class AuthItemController extends BaseController
             $parentName = isset($tree['parentName']) ? $tree['parentName'] : false;
             if ($parentName !== false) {
                 if ($parentName == '') {
-                    AuthItemChild::deleteAll(['child' => $name]);
+                    $this->aicRepository->delete(['child' => $name]);
                 } else {
                     /** @var AuthItemChild $authChild */
                     $authChild = $this->aicRepository->getChildByName($name);

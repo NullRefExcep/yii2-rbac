@@ -2,16 +2,18 @@
 
 namespace nullref\rbac\repositories;
 
+use nullref\rbac\repositories\interfaces\AuthItemChildRepositoryInterface;
+
 class PermissionRepository extends AbstractRepository
 {
     protected $activeRecord;
 
-    /** @var AuthItemChildRepository */
+    /** @var AuthItemChildRepositoryInterface */
     private $authItemChildRepository;
 
     public function __construct(
         $activeRecord,
-        AuthItemChildRepository $authItemChildRepository
+        AuthItemChildRepositoryInterface $authItemChildRepository
     )
     {
         $this->ar = $activeRecord;

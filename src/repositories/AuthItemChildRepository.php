@@ -3,9 +3,10 @@
 namespace nullref\rbac\repositories;
 
 use nullref\rbac\components\DBManager;
+use nullref\rbac\repositories\interfaces\AuthItemChildRepositoryInterface;
 use yii\helpers\ArrayHelper;
 
-class AuthItemChildRepository extends AbstractRepository
+class AuthItemChildRepository extends AbstractRepository implements AuthItemChildRepositoryInterface
 {
     public function getChildByName($name)
     {

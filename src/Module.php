@@ -31,6 +31,9 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
     /** @var @var string|null */
     public $userComponent = null;
 
+    /** @var string  */
+    public $userTable = 'user';
+
     /** @var RuleManager */
     public $ruleManager;
 
