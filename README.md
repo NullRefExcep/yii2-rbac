@@ -14,13 +14,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 
 Either run
 
-```
+```bash
 php composer.phar require --prefer-dist nullref/yii2-rbac "*"
 ```
 
 or add
 
-```
+```json
 "nullref/yii2-rbac": "*"
 ```
 
@@ -33,18 +33,18 @@ In modules configuration on 'rbac' section you
 with identity field and getId() method in it
 
 - need to specify userProvider class which implements interface
-```
+```php
 nullref\rbac\interfaces\UserProviderInterface
 ```
 with getUsers() method which has to return array of users with
 required fields ['id', 'username']
 
 - may to override ruleManager class which implements interface
-```
+```php
 nullref\rbac\interfaces\RuleManagerInterface
 ```
 with getList() method, there is RuleManager in module
-```
+```php
 nullref\rbac\components\RuleManager
 ```
 
@@ -52,7 +52,7 @@ nullref\rbac\components\RuleManager
 In `Module.php` add array with aliases for module controllers
 
 Ex:
-```
+```php
   public $controllerAliases = [
         '@app/modules/myModule/controllers',
         '@app/modules/myModule/controllers/admin',
@@ -60,11 +60,11 @@ Ex:
 ```
 
 Each controller you want to be under RBAC has to be extended from:
-```
+```php
 \nullref\rbac\components\BaseController
 ```
 or behavior() method has contain next item:
-```
+```php
  'access' => [
                 'class'      => \nullref\rbac\filters\AccessControl::class,
                 'controller' => $this,
@@ -75,29 +75,29 @@ or behavior() method has contain next item:
 
 To use this functionality you have to:
 - use widget in base layout
-```
+```php
 <?= ElementConfig::widget([]) ?>
 ```
 - specify $elementEditorRole in RBAC module by default 'elementEditor'
 - assign this role to your user
 - use html helper to build you 'a' and 'button'(for now) tags.
-```
+```php
 nullref\rbac\helpers\elementt\ElementHtml
 ```
 and provide data-identifier option with unique value to $options array
-```
+```php
     <?= ElementHtml::a('a', ['somewhere', ['data-identificator' => 'a-0.11723100 1545142675']) ?>
 ```
 You can use gii generator to generate unique values for your element (single line code only for now). 
 Before use you have to specify aliases for views folders
-```
+```php
   public $viewPathAliases = [
       '@app/modules/myModule/views',
   ];  
 ```
 
 **Before:**
-```
+```php
 <?php
 
 use nullref\rbac\helpers\element\ElementHtml;
@@ -114,7 +114,7 @@ use nullref\rbac\helpers\element\ElementHtml as A;
 ```
 
 **After:**
-```
+```php
 <?php
 
 use nullref\rbac\helpers\element\ElementHtml;
@@ -134,14 +134,14 @@ use nullref\rbac\helpers\element\ElementHtml as A;
 To use this functionality you have to:
 - add array with aliases for models in `Module.php`
 
-```
+```php
    public $modelAliases = [
           '@app/modules/myModule/models',
    ];  
 ```
 - add behavior in your Model and **validate** your model before save
 
-```
+```php
 public function behaviors()
 {
     return [
@@ -153,7 +153,7 @@ public function behaviors()
 ```
 - use nullref\rbac\widgets\ActiveField field in your ActiveForm
 
-```
+```php
  <?php $form = ActiveForm::begin([
         'fieldClass' => nullref\rbac\widgets\ActiveField::class,
  ]); ?>
