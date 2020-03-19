@@ -7,7 +7,7 @@
         "php": ">=7.0",
         "kartik-v/yii2-widget-depdrop": "*",
         "kartik-v/yii2-widget-select2": "^2.0",
-        "nullref/yii2-core": "^0.0.4",
+        "nullref/yii2-core": ">=0.0.4",
         "rmrevin/yii2-fontawesome": "^2.16",
         "wbraganca/yii2-fancytree-widget": "*",
         "yiisoft/yii2": ">=2.0.4",
