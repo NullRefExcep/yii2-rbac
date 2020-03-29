@@ -38,7 +38,8 @@ class Bootstrap implements BootstrapInterface
         if ($module->userProvider === null) {
             throw new InvalidConfigException(Module::class . '::userProvider has to be set');
         }
-        $module->userProvider = new $module->userProvider();
+
+        $module->userProvider = Yii::createObject($module->userProvider);
         $this->checkUserProvider($module);
 
         if ($module->userComponent === null) {
@@ -51,7 +52,7 @@ class Bootstrap implements BootstrapInterface
         if ($module->ruleManager === null) {
             $module->ruleManager = RuleManager::class;
         }
-        $module->ruleManager = new $module->ruleManager();
+        $module->ruleManager = Yii::createObject($module->ruleManager);
 
         $classMap = array_merge($module->defaultClassMap, $module->classMap);
         //TODO

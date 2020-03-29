@@ -135,7 +135,7 @@ class FieldReaderService
             include $filePath;
             $class = str_replace('.php', '', $model['file']);
             $className = $namescape . "\\" . $class;
-            $instance = new $className();
+            $instance = Yii::createObject($className);
 
             if (!method_exists($instance, 'scenarios')) {
                 continue;

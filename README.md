@@ -28,6 +28,8 @@ to the require section of your `composer.json` file.
 
 **Basic set up:** 
 
+At first you need to configure `authManager` component to use database. You need to use `\nullref\rbac\components\DBManager`.
+
 In modules configuration on 'rbac' section you 
 - need to specify id (ex: user, admin, etc) of userComponent ``\yii\web\User``
 with identity field and getId() method in it

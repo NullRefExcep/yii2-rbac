@@ -6,6 +6,7 @@ use nullref\rbac\components\DBManager;
 use nullref\rbac\Module;
 use nullref\rbac\repositories\interfaces\FieldAccessRepositoryInterface;
 use Yii;
+use yii\base\Model;
 use yii\web\User;
 
 class FieldCheckerService
@@ -32,12 +33,19 @@ class FieldCheckerService
         $this->userIdentity = $module->getUserIdentity();
     }
 
+    /**
+     * @param $model - object of model of model class
+     * @param $attribute - name of model attribute
+     * @return bool
+     */
     public function isAllowed($model, $attribute)
     {
         $identity = $this->userIdentity;
         if ($identity) {
             $userId = $identity->getId();
-            $fieldItems = $this->fieldAccessRepository->findItems(get_class($model), $model->scenario, $attribute);
+            $className = is_object($model) ? get_class($model) : $model;
+            $scenario = is_object($model) ? $model->scenario :  Model::SCENARIO_DEFAULT;
+            $fieldItems = $this->fieldAccessRepository->findItems($className, $scenario, $attribute);
             if (empty($fieldItems)) {
                 return true;
             }
