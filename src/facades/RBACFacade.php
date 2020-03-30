@@ -3,6 +3,7 @@
 namespace nullref\rbac\facades;
 
 use nullref\rbac\services\AssignmentService;
+use nullref\rbac\services\AuthTreeService;
 use yii\base\Component;
 
 class RBACFacade extends Component
