@@ -89,46 +89,55 @@ class Module extends BaseModule implements IAdminModule, IHasMigrateNamespace
             'label' => Yii::t('rbac', 'Access control'),
             'icon'  => FA::_WRENCH,
             'order' => 6,
+            'roles' => ['rbac'],
             'items' => [
                 [
                     'label' => Yii::t('rbac', 'Action access'),
                     'icon'  => FA::_MAP_SIGNS,
                     'url'   => '/rbac/access/',
+                    'roles' => ['rbac'],
                 ],
                 [
                     'label' => Yii::t('rbac', 'Elements Access'),
                     'icon'  => FA::_EXTERNAL_LINK,
                     'url'   => '/rbac/element/',
+                    'roles' => ['rbac'],
                 ],
                 [
                     'label' => Yii::t('rbac', 'Fields Access'),
                     'icon'  => FA::_TEXT_HEIGHT,
                     'url'   => '/rbac/field/',
+                    'roles' => ['rbac'],
                 ],
                 [
                     'label' => Yii::t('rbac', 'Assignments'),
                     'icon'  => FA::_GAVEL,
                     'url'   => '/rbac/assignment/',
+                    'roles' => ['rbac'],
                 ],
                 [
                     'label' => Yii::t('rbac', 'Auth items'),
                     'icon'  => FA::_GEARS,
                     'url'   => '/rbac/auth-item/',
+                    'roles' => ['rbac'],
                 ],
                 [
                     'label' => Yii::t('rbac', 'Roles'),
                     'icon'  => FA::_GEAR,
                     'url'   => '/rbac/role/',
+                    'roles' => ['rbac'],
                 ],
                 [
                     'label' => Yii::t('rbac', 'Permissions'),
                     'icon'  => FA::_GEAR,
                     'url'   => '/rbac/permission/',
+                    'roles' => ['rbac'],
                 ],
                 [
                     'label' => Yii::t('rbac', 'Rules'),
                     'icon'  => FA::_GAVEL,
                     'url'   => '/rbac/rule/',
+                    'roles' => ['rbac'],
                 ],
             ],
         ];
