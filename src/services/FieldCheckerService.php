@@ -34,17 +34,17 @@ class FieldCheckerService
     }
 
     /**
-     * @param $model - object of model of model class
+     * @param $className - class of model
      * @param $attribute - name of model attribute
+     * @param $scenario - scenario of model
+     *
      * @return bool
      */
-    public function isAllowed($model, $attribute)
+    public function isAllowedForClass($className, $attribute, $scenario = Model::SCENARIO_DEFAULT)
     {
         $identity = $this->userIdentity;
         if ($identity) {
             $userId = $identity->getId();
-            $className = is_object($model) ? get_class($model) : $model;
-            $scenario = is_object($model) ? $model->scenario :  Model::SCENARIO_DEFAULT;
             $fieldItems = $this->fieldAccessRepository->findItems($className, $scenario, $attribute);
             if (empty($fieldItems)) {
                 return true;
@@ -58,5 +58,16 @@ class FieldCheckerService
         }
 
         return false;
+    }
+
+    /**
+     * @param $model - object of model
+     * @param $attribute - name of model attribute
+     *
+     * @return bool
+     */
+    public function isAllowed($model, $attribute)
+    {
+        return $this->isAllowedForClass(get_class($model), $attribute, $model->scenario);
     }
 }
