@@ -1,7 +1,7 @@
 Yii2 RBAC (in development now)
 ===============
 
-[![Latest Stable Version](https://poser.pugx.org/nullref/yii2-admin/v/stable)](https://packagist.org/packages/nullref/yii2-rbac) [![Total Downloads](https://poser.pugx.org/nullref/yii2-rbac/downloads)](https://packagist.org/packages/nullref/yii2-rbac) [![Latest Unstable Version](https://poser.pugx.org/nullref/yii2-rbac/v/unstable)](https://packagist.org/packages/nullref/yii2-rbac) [![License](https://poser.pugx.org/nullref/yii2-rbac/license)](https://packagist.org/packages/nullref/yii2-rbac)
+[![Latest Stable Version](https://poser.pugx.org/nullref/yii2-rbac/v/stable)](https://packagist.org/packages/nullref/yii2-rbac) [![Total Downloads](https://poser.pugx.org/nullref/yii2-rbac/downloads)](https://packagist.org/packages/nullref/yii2-rbac) [![Latest Unstable Version](https://poser.pugx.org/nullref/yii2-rbac/v/unstable)](https://packagist.org/packages/nullref/yii2-rbac) [![License](https://poser.pugx.org/nullref/yii2-rbac/license)](https://packagist.org/packages/nullref/yii2-rbac)
 
 Advanced RBAC superstructure on yii2 RBAC, Dektrium extension
 
