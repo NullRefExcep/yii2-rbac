@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-lg-12">
-            <?= $form->field($model, 'userId')->hiddenInput(['value' => $model->userId]) ?>
+            <?= $form->field($model, 'userId')->hiddenInput(['value' => $model->userId])->label(false) ?>
 
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
